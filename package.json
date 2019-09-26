@@ -1,0 +1,59 @@
+{
+  "name": "react-designer-component",
+  "version": "1.0.0",
+  "description": "A simple reusable react designer component. You can add images, add texts, draw circles .. etc in this canvas",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd example && yarn start",
+    "prepare": "cd example && yarn install",
+    "prepublishOnly": "npm run transpile",
+    "transpile": "babel src -d dist --copy-files  --extensions '.ts,.tsx'",
+    "build": "cd example && yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whizsid/react-designer-component.git"
+  },
+  "keywords": [
+    "designer",
+    "canvas",
+    "images",
+    "circles",
+    "brush",
+    "rectangle",
+    "lines",
+    "react",
+    "customizable",
+    "paint",
+    "drawing",
+    "tool"
+  ],
+  "author": "WhizSid",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/whizsid/react-designer-component/issues"
+  },
+  "homepage": "https://github.com/whizsid/react-designer-component#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.6.0",
+    "@types/react": "^16.9.3",
+    "@types/react-dom": "^16.9.1",
+    "html-webpack-plugin": "^3.2.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "ts-loader": "^6.1.2",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "react-moveable": "^0.11.0"
+  },
+  "peerDependencies": {
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  }
+}
