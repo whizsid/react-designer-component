@@ -62,3 +62,7 @@ typings/
 
 # build directory
 dist
+
+# lock files
+yarn.lock
+example/yarn.lock
