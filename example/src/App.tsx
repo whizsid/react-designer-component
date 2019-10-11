@@ -1,26 +1,38 @@
 import React from "react";
-import "./App.css";
-import logo from "./logo.svg";
+import Designer from "../../src/Designer";
+import {DesignerItem} from "../../src/types";
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-};
+interface IState {
+  items: DesignerItem[];
+}
+
+class App extends React.Component <{},IState> {
+
+  constructor(props:{}){
+    super(props);
+
+    this.state = {
+      items:[]
+    };
+  }
+
+  public render(){
+    const {items} = this.state;
+
+    return (
+      <div>
+        <Designer
+          items={items}
+          onChangeItems={this.handleChangeItems}
+        />
+      </div>
+    );
+  }
+
+
+  protected handleChangeItems(items:DesignerItem[]){
+    this.setState({items});
+  }
+}
 
 export default App;

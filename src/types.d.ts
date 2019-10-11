@@ -82,7 +82,7 @@ export interface IDesignerProps {
   items: DesignerItem[];
   // Display or hide default toolbar
   // Make it false and use customButtons prop to bind events to your custom buttons
-  showToolbar: boolean;
+  showToolbar?: boolean;
   customButtons?: {
     textButton?: HTMLElement;
     brushButton?: HTMLElement;
@@ -92,22 +92,19 @@ export interface IDesignerProps {
     lineButton?: HTMLElement;
   };
   // Features disable or enable
-  features: {
-    text: boolean;
-    brush: boolean;
-    image: boolean;
-    circle: boolean;
-    rectangle: boolean;
-    line: boolean;
+  features?: {
+    text?: boolean;
+    brush?: boolean;
+    image?: boolean;
+    circle?: boolean;
+    rectangle?: boolean;
+    line?: boolean;
   };
   // Styling classes
-  classes: {
-    toolbar?: string;
-    toolbarButton?: string;
-    toolbarButtonIcon?: string;
-    paper?: string;
-    drawingArea?: string;
-    wrapper?: string;
+  classes?: {
+    designer?: {
+      wrapper?:string
+    }
   };
   // Calling when changing items
   onChangeItems:(items:DesignerItem[])=>void;

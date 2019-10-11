@@ -19,7 +19,8 @@
         ],
         "no-submodule-imports": false,
         "no-implicit-dependencies": false,
-        "no-console": false
+        "no-console": false,
+        "member-access": true
     },
     "rulesDirectory": []
 }
