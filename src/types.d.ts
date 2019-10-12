@@ -103,9 +103,41 @@ export interface IDesignerProps {
   // Styling classes
   classes?: {
     designer?: {
-      wrapper?:string
-    }
+      wrapper?: string;
+      toolbox?: {
+        wrapper?: string;
+      };
+      toolOptions?: {
+        wrapper?: string;
+      };
+      paper?: {
+        wrapper?: string;
+      };
+    };
   };
   // Calling when changing items
-  onChangeItems:(items:DesignerItem[])=>void;
+  onChangeItems: (items: DesignerItem[]) => void;
+
+  paperHeight?: string|number;
+  paperWidth?: string|number;
+}
+
+// Style classes
+interface IToolOptionClasses {
+  wrapper:string;
+}
+
+interface IToolBoxClasses {
+  wrapper:string;
+}
+
+interface IPaperClasses {
+  wrapper:string;
+}
+
+interface IDesignerClasses {
+  wrapper:string;
+  toolbox: IToolBoxClasses;
+  toolOptions: IToolOptionClasses;
+  paper: IPaperClasses;
 }

@@ -1,38 +1,61 @@
 import { merge } from "lodash";
 import * as React from "react";
-import { IDesignerProps } from "./types";
+import { IDesignerClasses, IDesignerProps } from "./types";
 
-interface IDesignerState {
-  classes: {
-    designer: {
-      wrapper: string;
-    };
-  };
+interface IRealClasses {
+  designer: IDesignerClasses;
 }
 
-const defaultClasses = {
+interface IDesignerState {
+  classes: IRealClasses;
+}
+
+const defaultClasses: IRealClasses = {
   designer: {
-    wrapper: "rdc-wrapper",
-  },
+    paper: {
+      wrapper: "rdc-paper"
+    },
+    toolOptions: {
+      wrapper: "rdc-tooloptions"
+    },
+    toolbox: {
+      wrapper: "rdc-toolbox"
+    },
+    wrapper: "rdc-wrapper"
+  }
 };
 
 class Designer extends React.Component<IDesignerProps, IDesignerState> {
-  public componentDidMount() {
+  public static defaultProps = {
+    paperHeight: 600,
+    paperWidth: 300
+  };
+
+  constructor(props: IDesignerProps) {
+    super(props);
+
     const { classes } = this.props;
 
-    this.setState({ classes: merge(classes, defaultClasses) });
+    this.state = {
+      classes: merge(classes, defaultClasses)
+    };
   }
 
   public render() {
-    const { classes } = this.props;
+    const { classes } = this.state;
+
+    const { paperHeight, paperWidth } = this.props;
 
     return (
-      <div
-        className={
-          classes && classes.designer ? classes.designer.wrapper : undefined
-        }
-      >
-        ljnj
+      <div className={classes.designer.wrapper}>
+        <div className={classes.designer.toolbox.wrapper}>kkmk</div>
+        <div className={classes.designer.toolOptions.wrapper}>Toolbar</div>
+        <div
+          className={classes.designer.paper.wrapper}
+          style={{ width: paperWidth, height: paperHeight }}
+        >
+          Paper
+        </div>
       </div>
     );
   }

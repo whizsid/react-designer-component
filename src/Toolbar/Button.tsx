@@ -1,14 +1,13 @@
 import * as React from "react";
-import Button from "./Button";
 
-class Toolbar extends React.Component {
+class Button extends React.Component {
     public render(){
         return (
             <div>
-                <Button />
+                Button
             </div>
         );
     }
 }
 
-export default Toolbar;
+export default Button;
