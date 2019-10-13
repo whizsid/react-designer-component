@@ -8,10 +8,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --mode development --open --hot",
-    "prepare": "cd example && yarn install",
     "prepublishOnly": "npm run transpile",
     "transpile": "babel src -d dist --copy-files  --extensions '.ts,.tsx'",
-    "build": "cd example && yarn build"
+    "build": "yarn build"
   },
   "repository": {
     "type": "git",
@@ -54,6 +53,7 @@
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "style-loader": "^1.0.0",
+    "svg-loader": "^0.0.2",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-react": "^4.1.0",

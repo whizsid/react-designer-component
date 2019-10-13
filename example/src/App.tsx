@@ -3,7 +3,7 @@ import Designer from "../../src/Designer";
 import {DesignerItem} from "../../src/types";
 
 interface IState {
-  items: DesignerItem[];
+  items: {[x:string]:DesignerItem};
 }
 
 class App extends React.Component <{},IState> {
@@ -12,8 +12,10 @@ class App extends React.Component <{},IState> {
     super(props);
 
     this.state = {
-      items:[]
+      items:{}
     };
+
+    this.handleChangeItems = this.handleChangeItems.bind(this);
   }
 
   public render(){
@@ -30,7 +32,8 @@ class App extends React.Component <{},IState> {
   }
 
 
-  protected handleChangeItems(items:DesignerItem[]){
+  protected handleChangeItems(items:{[x:string]:DesignerItem}){
+    console.log(items);
     this.setState({items});
   }
 }
