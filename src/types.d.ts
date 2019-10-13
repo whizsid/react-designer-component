@@ -51,7 +51,6 @@ export type TextItem = IHasRotate &
 
 export type LineItem = IHasRotate &
   IItem &
-  IHasColor &
   IHasOutline &
   IHasRotate & {
     type: "line";

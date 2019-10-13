@@ -209,7 +209,6 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     const {itemInitSize} = this.props;
 
     this.addItem({
-      color,
       outlineColor:color,
       outlineWeight:1,
       position:this.generatePosition({...itemInitSize!,height:2}),
