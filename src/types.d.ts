@@ -208,14 +208,14 @@ export interface IToolBoxProps {
 
 export interface IToolBoxButtonProps {
   classes: IToolBoxButtonClasses;
-  icon: string;
+  icon: JSX.Element;
   tooltip?: string;
   onClick?: (e: React.MouseEvent) => void;
 }
 
 export interface IToolBoxSwitchProps {
   classes: IToolBoxSwitchClasses;
-  icon: string;
+  icon: JSX.Element;
   tooltip: string;
   active: boolean;
   onToggle: (status: boolean) => void;
