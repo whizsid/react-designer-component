@@ -7,7 +7,7 @@ export interface ISize {
 
 export interface IPosition {
   left: number;
-  height: number;
+  top: number;
 }
 
 // Items and behaviours
@@ -38,7 +38,7 @@ export interface IHasOutline {
 export type TextItem = IHasRotate &
   IItem &
   IHasColor &
-  IHasOutline & {
+  IHasRotate &{
     text: string;
     fontName: string;
     fontId: string | number;
@@ -100,6 +100,12 @@ export type DesignerItem =
   | RectangleItem
   | ImageItem
   | BrushItem;
+
+export interface IDesignerItemComponent {
+  selected:boolean;
+  onSelect?:(e:React.MouseEvent)=>void;
+  onRemove?:(e:React.MouseEvent)=>void;
+}
 
 // Style classes
 export interface IToolBoxButtonClasses {
@@ -204,6 +210,7 @@ export interface IToolBoxProps {
   onAddCircle?: (e: React.MouseEvent) => void;
   onAddRectangle?: (e: React.MouseEvent) => void;
   onAddLine?:(e:React.MouseEvent)=>void;
+  onAddText?:(e:React.MouseEvent)=>void;
 }
 
 export interface IToolBoxButtonProps {

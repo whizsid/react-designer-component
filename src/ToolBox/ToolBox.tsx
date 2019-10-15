@@ -3,7 +3,7 @@ import BoxIcon from "../Icon/AddBox.svg";
 import CircleIcon from "../Icon/AddCircle.svg";
 import ImageIcon from "../Icon/AddPhotoAlternate.svg";
 import LineIcon from "../Icon/LineWeight.svg";
-// import TextIcon from "../Icon/TextFormat.svg";
+import TextIcon from "../Icon/TextFormat.svg";
 import { IImageInfo, IToolBoxProps } from "../types";
 import Button from "./Button";
 
@@ -25,7 +25,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
   }
 
   public render() {
-    const { classes, onAddCircle, onAddRectangle, onAddLine } = this.props;
+    const { classes, onAddCircle, onAddRectangle, onAddLine, onAddText } = this.props;
     return (
       <div className={classes.wrapper}>
         <Button
@@ -51,6 +51,12 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
           icon={<LineIcon />}
           classes={classes.button}
           tooltip={"Click to add a straight line"}
+        />
+        <Button
+          onClick={onAddText}
+          icon={<TextIcon />}
+          classes={classes.button}
+          tooltip={"Click to add text"}
         />
         <input
           onChange={this.handleChangeImage}

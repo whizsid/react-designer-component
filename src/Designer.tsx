@@ -80,6 +80,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     this.handleAddCircle = this.handleAddCircle.bind(this);
     this.handleAddRectangle = this.handleAddRectangle.bind(this);
     this.handleAddLine = this.handleAddLine.bind(this);
+    this.handleAddText = this.handleAddText.bind(this);
   }
 
   public componentDidUpdate(prevProps: IDesignerProps) {
@@ -104,6 +105,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           onAddCircle={this.handleAddCircle}
           onAddRectangle={this.handleAddRectangle}
           onAddLine={this.handleAddLine}
+          onAddText={this.handleAddText}
         />
         <div className={classes.designer.toolOptions.wrapper}>Toolbar</div>
         <Paper
@@ -134,8 +136,8 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     const {paperSize} = this.props;
 
     return {
-      height: (paperSize!.height - size.height)/2,
       left: (paperSize!.width - size.width)/2,
+      top: (paperSize!.height - size.height)/2,
     };
   }
 
@@ -214,6 +216,24 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       position:this.generatePosition({...itemInitSize!,height:2}),
       rotate:0,
       type:"line",
+    });
+  }
+
+  private handleAddText(){
+    const {color} = this.state;
+
+    this.addItem({
+      bold: false,
+      color,
+      fontId:2,
+      fontName:"Sans Serif",
+      italic:false,
+      position:this.generatePosition({width:200,height:10}),
+      rotate:0,
+      size: 10,
+      text:"Click to change text",
+      type:"text",
+      underline:false
     });
   }
 }
