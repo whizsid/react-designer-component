@@ -1,6 +1,6 @@
 import * as React from "react";
 import Moveable, { OnDrag, OnResize, OnRotate } from "react-moveable";
-import { IPaperProps, DesignerItem } from "../types";
+import { DesignerItem,IPaperProps, ResizableItem, RotatableItem } from "../types";
 
 interface IState {
   target?: HTMLElement | SVGElement;
@@ -14,12 +14,16 @@ class Paper extends React.Component<IPaperProps, IState> {
     super(props);
 
     this.state = {};
+
+    this.handleDrag = this.handleDrag.bind(this);
+    this.handleResize = this.handleResize.bind(this);
+    this.handleRotate = this.handleRotate.bind(this);
   }
 
   public render() {
     const { classes, height, width, area } = this.props;
 
-    const {target} = this.state;
+    const { target } = this.state;
 
     const clipPath =
       "polygon(" +
@@ -36,31 +40,74 @@ class Paper extends React.Component<IPaperProps, IState> {
           jnj
         </div>
         <div>
-            <Moveable
-                container={this.canvasRef.current}
-                target={
-                    target
-                }
-                keepRatio={false}
-                origin={true}
-                draggable={true}
-                snappable={true}
-                transformOrigin="% %"
-                verticalGuidelines={[100, 200, 400, 500]}
-                horizontalGuidelines={[100, 200, 400, 500]}
-                snapCenter={true}
-                resizable={true}
-                throttleDrag={0}
-                throttleResize={1}
-                throttleRotate={1}
-                rotatable={true}
-                // onDrag={this.handleDrag(item.itemId)}
-                // onResize={this.handleResize(item)}
-                // onRotate={this.handleRotate(item.itemId)}
-            />
+          <Moveable
+            container={this.canvasRef.current}
+            target={target}
+            keepRatio={false}
+            origin={true}
+            draggable={true}
+            snappable={true}
+            transformOrigin="% %"
+            verticalGuidelines={[100, 200, 400, 500]}
+            horizontalGuidelines={[100, 200, 400, 500]}
+            snapCenter={true}
+            resizable={true}
+            throttleDrag={0}
+            throttleResize={1}
+            throttleRotate={1}
+            rotatable={true}
+            onDrag={this.handleDrag}
+            onResize={this.handleResize}
+            onRotate={this.handleRotate}
+          />
         </div>
       </div>
     );
+  }
+
+  protected handleDrag(e: OnDrag) {
+    const { onDrag } = this.props;
+    const { selectedItem } = this.state;
+
+    if (onDrag && selectedItem) {
+      onDrag({ ...selectedItem, position: { left: e.left, top: e.top } });
+    }
+  }
+
+  protected handleResize(e: OnResize) {
+    const { onResize } = this.props;
+    const { selectedItem } = this.state;
+
+    if (onResize && selectedItem) {
+      let left = selectedItem.position.left as number;
+      let top = selectedItem.position.top as number;
+
+      if (e.direction[0] === -1) {
+        left -= e.delta[0];
+      }
+
+      if (e.direction[1] === -1) {
+        top -= e.delta[1];
+      }
+
+      const modedItem = {
+        ...selectedItem,
+        position: { left, top },
+        size: { height: e.height, width: e.width }
+      };
+
+      onResize(modedItem as ResizableItem);
+    }
+  }
+
+  protected handleRotate(e: OnRotate) {
+    const { onRotate } = this.props;
+    const {selectedItem} = this.state;
+
+    if(onRotate&&selectedItem){
+        const modedItem = {...selectedItem,rotate:e.rotate};
+        onRotate( modedItem as RotatableItem);
+    }
   }
 }
 

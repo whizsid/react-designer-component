@@ -1,5 +1,5 @@
 import * as React from "react";
-import {DeepPartial} from "ts-essentials";
+import { DeepPartial } from "ts-essentials";
 
 export interface ISize {
   width: number;
@@ -33,17 +33,17 @@ export interface IHasColor {
 
 export interface IHasOutline {
   outlineWeight: number;
-  outlineColor:string;
+  outlineColor: string;
 }
 
 export type TextItem = IHasRotate &
   IItem &
   IHasColor &
-  IHasRotate &{
+  IHasRotate & {
     text: string;
     fontName: string;
     fontId: string | number;
-    size: number;
+    fontSize: number;
     underline: boolean;
     italic: boolean;
     bold: boolean;
@@ -102,10 +102,19 @@ export type DesignerItem =
   | ImageItem
   | BrushItem;
 
+export type ResizableItem = CircleItem | RectangleItem | ImageItem;
+
+export type RotatableItem =
+  | TextItem
+  | LineItem
+  | CircleItem
+  | RectangleItem
+  | ImageItem;
+
 export interface IDesignerItemComponent {
-  selected:boolean;
-  onSelect?:(e:React.MouseEvent)=>void;
-  onRemove?:(e:React.MouseEvent)=>void;
+  selected: boolean;
+  onSelect?: (e: React.MouseEvent) => void;
+  onRemove?: (e: React.MouseEvent) => void;
 }
 
 // Style classes
@@ -175,14 +184,14 @@ export interface IDesignerProps {
     line?: boolean;
   };
   // Styling classes
-  classes?:  DeepPartial<IStyleClasses>;
+  classes?: DeepPartial<IStyleClasses>;
   // Calling when changing items
   onChangeItems: (items: { [x: string]: DesignerItem }) => void;
 
   paperSize?: ISize;
   itemInitSize?: ISize;
 
-  drawingArea?: IPosition[]
+  drawingArea?: IPosition[];
 }
 
 // Sub component props
@@ -191,8 +200,8 @@ export interface IToolBoxProps {
   onAddImage?: (info: IImageInfo) => void;
   onAddCircle?: (e: React.MouseEvent) => void;
   onAddRectangle?: (e: React.MouseEvent) => void;
-  onAddLine?:(e:React.MouseEvent)=>void;
-  onAddText?:(e:React.MouseEvent)=>void;
+  onAddLine?: (e: React.MouseEvent) => void;
+  onAddText?: (e: React.MouseEvent) => void;
 }
 
 export interface IToolBoxButtonProps {
@@ -215,7 +224,11 @@ export interface IPaperProps {
   height: number | string;
   width: number | string;
   items: { [x: string]: DesignerItem };
-  area: IPosition[]
+  area: IPosition[];
+  onDrag?: (item: DesignerItem) => void;
+  onResize?: (item: ResizableItem) => void;
+  onRotate?: (item: RotatableItem) => void;
+  onRemove?: (item: DesignerItem) => void;
 }
 
 export interface IIconProps {

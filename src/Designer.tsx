@@ -230,10 +230,10 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       color,
       fontId: 2,
       fontName: "Sans Serif",
+      fontSize: 10,
       italic: false,
       position: this.generatePosition({ width: 200, height: 10 }),
       rotate: 0,
-      size: 10,
       text: "Click to change text",
       type: "text",
       underline: false
