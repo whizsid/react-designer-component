@@ -1,4 +1,5 @@
 import * as React from "react";
+import {DeepPartial} from "ts-essentials";
 
 export interface ISize {
   width: number;
@@ -6,8 +7,8 @@ export interface ISize {
 }
 
 export interface IPosition {
-  left: number;
-  top: number;
+  left: number | string;
+  top: number | string;
 }
 
 // Items and behaviours
@@ -108,6 +109,11 @@ export interface IDesignerItemComponent {
 }
 
 // Style classes
+
+export interface IStyleClasses {
+  designer: IDesignerClasses;
+}
+
 export interface IToolBoxButtonClasses {
   wrapper: string;
   icon: string;
@@ -135,6 +141,7 @@ export interface IToolBoxClasses {
 
 export interface IPaperClasses {
   wrapper: string;
+  drawingArea: string;
 }
 
 export interface IDesignerClasses {
@@ -145,7 +152,6 @@ export interface IDesignerClasses {
 }
 
 // Props
-
 export interface IDesignerProps {
   items: { [x: string]: DesignerItem };
   // Display or hide default toolbar
@@ -169,38 +175,14 @@ export interface IDesignerProps {
     line?: boolean;
   };
   // Styling classes
-  classes?: {
-    designer?: {
-      wrapper?: string;
-      toolbox?: {
-        wrapper?: string;
-        button?: {
-          wrapper?: string;
-          icon?: string;
-          tooltip?: string;
-        };
-        switch?: {
-          wrapper?: {
-            active?: string;
-            default?: string;
-          };
-          icon?: string;
-          tooltip?: string;
-        };
-      };
-      toolOptions?: {
-        wrapper?: string;
-      };
-      paper?: {
-        wrapper?: string;
-      };
-    };
-  };
+  classes?:  DeepPartial<IStyleClasses>;
   // Calling when changing items
   onChangeItems: (items: { [x: string]: DesignerItem }) => void;
 
   paperSize?: ISize;
   itemInitSize?: ISize;
+
+  drawingArea?: IPosition[]
 }
 
 // Sub component props
@@ -232,6 +214,8 @@ export interface IPaperProps {
   classes: IPaperClasses;
   height: number | string;
   width: number | string;
+  items: { [x: string]: DesignerItem };
+  area: IPosition[]
 }
 
 export interface IIconProps {

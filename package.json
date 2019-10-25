@@ -54,6 +54,7 @@
     "react-dom": "^16.9.0",
     "react-svg-loader": "^3.0.3",
     "style-loader": "^1.0.0",
+    "ts-essentials": "^3.0.2",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-react": "^4.1.0",
