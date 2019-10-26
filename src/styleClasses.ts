@@ -3,7 +3,13 @@ import { IStyleClasses } from "./types";
 const styleClasses: IStyleClasses = {
   designer: {
     paper: {
-        drawingArea: "rdc-paper-drawing-area",
+        drawingArea:{
+          item:{
+            closeButton:"rdc-paper-drawing-item-close"  ,
+            wrapper: "rdc-paper-drawing-item"
+          },
+          wrapper:"rdc-paper-drawing",
+        },
         wrapper: "rdc-paper",
     },
     toolOptions: {

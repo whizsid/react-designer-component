@@ -1,5 +1,6 @@
 import * as React from "react";
 import { DeepPartial } from "ts-essentials";
+import { string } from "prop-types";
 
 export interface ISize {
   width: number;
@@ -15,7 +16,15 @@ export interface IPosition {
 
 export interface IItem {
   position: IPosition;
-  itemId?: number;
+  itemId?: number;  
+  ables:{
+    rotate:boolean;
+    move: boolean;
+    resize: boolean;
+    close: boolean;
+    outline: boolean;
+    color: boolean;
+  }
 }
 
 export interface IResizable {
@@ -112,6 +121,7 @@ export type RotatableItem =
   | ImageItem;
 
 export interface IDesignerItemComponent {
+  classes: IPaperItemClasses;
   selected: boolean;
   onSelect?: (e: React.MouseEvent) => void;
   onRemove?: (e: React.MouseEvent) => void;
@@ -150,7 +160,17 @@ export interface IToolBoxClasses {
 
 export interface IPaperClasses {
   wrapper: string;
-  drawingArea: string;
+  drawingArea: IPaperDrawingAreaClasses ;
+}
+
+export interface IPaperDrawingAreaClasses {
+  wrapper: string;
+  item: IPaperItemClasses;
+}
+
+export interface IPaperItemClasses {
+  wrapper: string;
+  closeButton: string;
 }
 
 export interface IDesignerClasses {

@@ -1,5 +1,6 @@
 import { merge } from "lodash";
 import * as React from "react";
+import { DeepPartial } from "ts-essentials";
 import Paper from "./Paper/Paper";
 import styleClasses from "./styleClasses";
 import "./styles.css";
@@ -23,7 +24,7 @@ interface IDesignerState {
 }
 
 class Designer extends React.Component<IDesignerProps, IDesignerState> {
-  public static defaultProps = {
+  public static defaultProps:DeepPartial<IDesignerProps> = {
     itemInitSize: {
       height: 100,
       width: 100
@@ -78,6 +79,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     this.handleAddRectangle = this.handleAddRectangle.bind(this);
     this.handleAddLine = this.handleAddLine.bind(this);
     this.handleAddText = this.handleAddText.bind(this);
+    this.handleChangeItem = this.handleChangeItem.bind(this);
   }
 
   public componentDidUpdate(prevProps: IDesignerProps) {
@@ -111,6 +113,9 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           width={paperSize!.width}
           items={items}
           area={area}
+          onDrag={this.handleChangeItem}
+          onResize={this.handleChangeItem}
+          onRotate={this.handleChangeItem}
         />
       </div>
     );
@@ -122,7 +127,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
 
     const items = useInternalItems ? this.state.items : this.props.items;
 
-    const newItems = { ...items, [lastItemId + 1]: item };
+    const newItems = { ...items, [lastItemId + 1]: {...item,itemId:lastItemId+1} };
 
     this.setState({ items: newItems, lastItemId: lastItemId + 1 });
 
@@ -166,6 +171,14 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     const position = this.generatePosition(size);
 
     this.addItem({
+      ables:{
+        close: true,
+        color: true,
+        move:true,
+        outline:true,
+        resize:true,
+        rotate:true,
+      },
       data: info.data,
       naturalSize: info.size,
       outlineColor: color,
@@ -182,6 +195,14 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     const { color } = this.state;
 
     this.addItem({
+      ables:{
+        close: true,
+        color: true,
+        move:true,
+        outline:true,
+        resize:true,
+        rotate:true,
+      },
       color: "transparent",
       naturalSize: itemInitSize!,
       outlineColor: color,
@@ -198,6 +219,14 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     const { color } = this.state;
 
     this.addItem({
+      ables: {
+        close: true,
+        color: true,
+        move: true,
+        outline: true,
+        resize: true,
+        rotate: true
+      },
       color: "transparent",
       naturalSize: itemInitSize!,
       outlineColor: color,
@@ -214,6 +243,14 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     const { itemInitSize } = this.props;
 
     this.addItem({
+      ables: {
+        close: true,
+        color: true,
+        move: true,
+        outline: true,
+        resize: false,
+        rotate: true
+      },
       outlineColor: color,
       outlineWeight: 1,
       position: this.generatePosition({ ...itemInitSize!, height: 2 }),
@@ -226,6 +263,14 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     const { color } = this.state;
 
     this.addItem({
+      ables: {
+        close: true,
+        color: true,
+        move: true,
+        outline: false,
+        resize: false,
+        rotate: true
+      },
       bold: false,
       color,
       fontId: 2,
@@ -238,6 +283,25 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       type: "text",
       underline: false
     });
+  }
+
+  private handleChangeItem(item:DesignerItem){
+    const {useInternalItems} = this.state;
+    const {onChangeItems} = this.props;
+
+    const {items} = useInternalItems?this.state:this.props;
+
+    if(typeof item.itemId ==="undefined"){
+      return;
+    }
+    
+    items[item.itemId] = {...item};
+
+    if(useInternalItems){
+      this.setState({items});
+    } else {
+      onChangeItems(items);
+    }
   }
 }
 

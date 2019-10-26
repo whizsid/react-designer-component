@@ -33,7 +33,6 @@ class App extends React.Component <{},IState> {
 
 
   protected handleChangeItems(items:{[x:string]:DesignerItem}){
-    console.log(items);
     this.setState({items});
   }
 }
