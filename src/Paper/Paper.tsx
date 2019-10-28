@@ -10,7 +10,7 @@ import Basic from "./Basic";
 
 interface IState {
   target?: HTMLElement;
-  selectedItem?: DesignerItem;
+  mouseDown: boolean;
 }
 
 class Paper extends React.Component<IPaperProps, IState> {
@@ -19,17 +19,22 @@ class Paper extends React.Component<IPaperProps, IState> {
   constructor(props: IPaperProps) {
     super(props);
 
-    this.state = {};
+    this.state = { mouseDown: false };
 
-    this.handleDrag = this.handleDrag.bind(this);
-    this.handleResize = this.handleResize.bind(this);
-    this.handleRotate = this.handleRotate.bind(this);
+    this.handleDragItem = this.handleDragItem.bind(this);
+    this.handleResizeItem = this.handleResizeItem.bind(this);
+    this.handleRotateItem = this.handleRotateItem.bind(this);
     this.renderItem = this.renderItem.bind(this);
+
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleMouseLeave = this.handleMouseLeave.bind(this);
   }
 
   public renderItem(item: DesignerItem) {
     const { classes } = this.props;
-    const { selectedItem } = this.state;
+    const { selectedItem } = this.props;
 
     switch (item.type) {
       case "image":
@@ -77,9 +82,10 @@ class Paper extends React.Component<IPaperProps, IState> {
   }
 
   public render() {
-    const { classes, height, width, area, items } = this.props;
+    const { classes, height, width, area, items, cursor } = this.props;
 
-    const { target, selectedItem } = this.state;
+    const { target } = this.state;
+    const { selectedItem } = this.props;
 
     const clipPath =
       "polygon(" +
@@ -108,55 +114,68 @@ class Paper extends React.Component<IPaperProps, IState> {
             throttleResize={1}
             throttleRotate={1}
             rotatable={selectedItem.ables.rotate}
-            onDrag={this.handleDrag}
-            onResize={this.handleResize}
-            onRotate={this.handleRotate}
+            onDrag={this.handleDragItem}
+            onResize={this.handleResizeItem}
+            onRotate={this.handleRotateItem}
           />
         ) : null}
-        <div
+        <span
           className={classes.drawingArea.wrapper}
           style={{
             clipPath,
+            cursor,
+            display:"block",
             height,
             overflow: "hidden",
             position: "relative",
             width
           }}
           ref={this.canvasRef}
+          onMouseDown={this.handleMouseDown}
+          onMouseMove={this.handleMouseMove}
+          onMouseUp={this.handleMouseUp}
+          onMouseLeave={this.handleMouseLeave}
         >
           {Object.values(items).map(this.renderItem)}
-        </div>
+        </span>
       </div>
     );
   }
 
   protected handleSelectItem(item: DesignerItem) {
-    return (e: React.MouseEvent) => {
-      if (e.target) {
-        const target = e.currentTarget as HTMLElement;
-        this.setState({ selectedItem: item, target });
+    return (e: React.MouseEvent<HTMLElement>) => {
+      const { onSelectItem } = this.props;
+
+      const target = e.target as HTMLElement;
+      if (target.tagName !== "P" && onSelectItem) {
+        onSelectItem(item);
+        this.setState({ target });
       }
     };
   }
 
-  protected handleDrag(e: OnDrag) {
-    const { onDrag, items } = this.props;
-    const { selectedItem } = this.state;
+  protected handleDragItem(e: OnDrag) {
+    const { onDragItem, items } = this.props;
+    const { selectedItem } = this.props;
 
-    if (onDrag && selectedItem && typeof selectedItem.itemId !== "undefined") {
-      onDrag({
+    if (
+      onDragItem &&
+      selectedItem &&
+      typeof selectedItem.itemId !== "undefined"
+    ) {
+      onDragItem({
         ...items[selectedItem.itemId],
         position: { left: e.left, top: e.top }
       });
     }
   }
 
-  protected handleResize(e: OnResize) {
-    const { onResize, items } = this.props;
-    const { selectedItem } = this.state;
+  protected handleResizeItem(e: OnResize) {
+    const { onResizeItem, items } = this.props;
+    const { selectedItem } = this.props;
 
     if (
-      onResize &&
+      onResizeItem &&
       selectedItem &&
       typeof selectedItem.itemId !== "undefined"
     ) {
@@ -177,32 +196,100 @@ class Paper extends React.Component<IPaperProps, IState> {
         size: { height: e.height, width: e.width }
       };
 
-      onResize(modedItem as ResizableItem);
+      onResizeItem(modedItem as ResizableItem);
     }
   }
 
-  protected handleRotate(e: OnRotate) {
-    const { onRotate, items } = this.props;
-    const { selectedItem } = this.state;
+  protected handleRotateItem(e: OnRotate) {
+    const { onRotateItem, items ,selectedItem} = this.props;
 
     if (
-      onRotate &&
+      onRotateItem &&
       selectedItem &&
       typeof selectedItem.itemId !== "undefined"
     ) {
       const modedItem = { ...items[selectedItem.itemId], rotate: e.rotate };
-      onRotate(modedItem as RotatableItem);
+      onRotateItem(modedItem as RotatableItem);
     }
   }
 
   protected handleRemoveItem(item: DesignerItem) {
     return () => {
-      const { onRemove } = this.props;
+      const { onRemoveItem } = this.props;
 
-      if (onRemove) {
-        onRemove(item);
+      if (onRemoveItem) {
+        this.setState({target:undefined},()=>{
+          onRemoveItem(item);
+        });
       }
     };
+  }
+
+  protected handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
+    const { onMouseDown, selectedItem , onSelectItem} = this.props;
+    this.setState({ mouseDown: true });
+
+    const boundingBox = e.currentTarget.getBoundingClientRect();
+    const target = e.target as HTMLElement;
+
+    if(target.tagName==="SPAN"&&selectedItem&&onSelectItem){
+      this.setState({target:undefined},()=>{
+        onSelectItem(undefined);
+      });
+    }
+
+    if (onMouseDown) {
+      onMouseDown({
+        left: e.clientX - boundingBox.left,
+        top: e.clientY - boundingBox.top
+      });
+    }
+  }
+
+  protected handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const { mouseDown } = this.state;
+    const { onMouseMove } = this.props;
+
+    const boundingBox = e.currentTarget.getBoundingClientRect();
+
+    if (mouseDown && onMouseMove) {
+      onMouseMove({
+        left: e.clientX - boundingBox.left,
+        top: e.clientY - boundingBox.top
+      });
+    }
+  }
+
+  protected handleMouseUp(e: React.MouseEvent<HTMLDivElement>) {
+    const { onMouseUp } = this.props;
+
+    const boundingBox = e.currentTarget.getBoundingClientRect();
+
+    this.setState({ mouseDown: false });
+    if (onMouseUp) {
+      onMouseUp({
+        left: e.clientX - boundingBox.left,
+        top: e.clientY - boundingBox.top
+      });
+    }
+  }
+
+  protected handleMouseLeave(e: React.MouseEvent<HTMLDivElement>) {
+    const { mouseDown } = this.state;
+    const { onMouseUp } = this.props;
+
+    const boundingBox = e.currentTarget.getBoundingClientRect();
+
+    if (mouseDown) {
+      this.setState({ mouseDown: false });
+
+      if (onMouseUp) {
+        onMouseUp({
+          left: e.clientX - boundingBox.left,
+          top: e.clientY - boundingBox.top
+        });
+      }
+    }
   }
 }
 

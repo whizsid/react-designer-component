@@ -25,12 +25,13 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
   }
 
   public render() {
-    const { classes, onAddCircle, onAddRectangle, onAddLine, onAddText } = this.props;
+    const { classes, onAddCircle, onAddRectangle, onAddLine, onAddText, mode } = this.props;
     return (
       <div className={classes.wrapper}>
         <Button
           onClick={this.handleClickImageInput}
           icon={<ImageIcon />}
+          active={mode&&mode==="image"}
           classes={classes.button}
           tooltip={"Click to add an image"}
         />
@@ -38,24 +39,28 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
           onClick={onAddCircle}
           icon={<CircleIcon />}
           classes={classes.button}
+          active={mode&&mode==="circle"}
           tooltip={"Click to add a circle"}
         />
         <Button
           onClick={onAddRectangle}
           icon={<BoxIcon />}
           classes={classes.button}
+          active={mode&&mode==="rectangle"}
           tooltip={"Click to add a rectangle"}
         />
         <Button
           onClick={onAddLine}
           icon={<LineIcon />}
           classes={classes.button}
+          active={mode&&mode==="line"}
           tooltip={"Click to add a straight line"}
         />
         <Button
           onClick={onAddText}
           icon={<TextIcon />}
           classes={classes.button}
+          active={mode&&mode==="text"}
           tooltip={"Click to add text"}
         />
         <input

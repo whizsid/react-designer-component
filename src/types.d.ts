@@ -8,8 +8,8 @@ export interface ISize {
 }
 
 export interface IPosition {
-  left: number | string;
-  top: number | string;
+  left: number;
+  top: number;
 }
 
 // Items and behaviours
@@ -123,7 +123,7 @@ export type RotatableItem =
 export interface IDesignerItemComponent {
   classes: IPaperItemClasses;
   selected: boolean;
-  onSelect?: (e: React.MouseEvent) => void;
+  onSelect?: (e: React.MouseEvent<HTMLElement>) => void;
   onRemove?: (e: React.MouseEvent) => void;
 }
 
@@ -134,7 +134,10 @@ export interface IStyleClasses {
 }
 
 export interface IToolBoxButtonClasses {
-  wrapper: string;
+  wrapper: {
+    active: string;
+    default: string;
+  };
   icon: string;
   tooltip: string;
 }
@@ -217,6 +220,7 @@ export interface IDesignerProps {
 // Sub component props
 export interface IToolBoxProps {
   classes: IToolBoxClasses;
+  mode?: DesignerItem["type"];
   onAddImage?: (info: IImageInfo) => void;
   onAddCircle?: (e: React.MouseEvent) => void;
   onAddRectangle?: (e: React.MouseEvent) => void;
@@ -225,6 +229,7 @@ export interface IToolBoxProps {
 }
 
 export interface IToolBoxButtonProps {
+  active?: boolean;
   classes: IToolBoxButtonClasses;
   icon: JSX.Element;
   tooltip?: string;
@@ -244,11 +249,17 @@ export interface IPaperProps {
   height: number | string;
   width: number | string;
   items: { [x: string]: DesignerItem };
+  selectedItem?: DesignerItem;
   area: IPosition[];
-  onDrag?: (item: DesignerItem) => void;
-  onResize?: (item: ResizableItem) => void;
-  onRotate?: (item: RotatableItem) => void;
-  onRemove?: (item: DesignerItem) => void;
+  cursor?: React.CSSProperties["cursor"];
+  onDragItem?: (item: DesignerItem) => void;
+  onResizeItem?: (item: ResizableItem) => void;
+  onRotateItem?: (item: RotatableItem) => void;
+  onRemoveItem?: (item: DesignerItem) => void;
+  onSelectItem?: (item?: DesignerItem) => void;
+  onMouseDown?:(position:IPosition)=>void;
+  onMouseMove?:(position:IPosition)=>void;
+  onMouseUp?:(position:IPosition)=>void;
 }
 
 export interface IIconProps {

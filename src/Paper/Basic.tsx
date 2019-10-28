@@ -37,7 +37,7 @@ class Basic extends React.Component<
         }}
       >
         {selected ? (
-          <div className={classes.closeButton} onClick={onRemove} />
+          <p className={classes.closeButton} onClick={onRemove} >X</p>
         ) : null}
       </div>
     );

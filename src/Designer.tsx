@@ -10,7 +10,6 @@ import {
   IDesignerProps,
   IImageInfo,
   IPosition,
-  ISize,
   IStyleClasses
 } from "./types";
 
@@ -21,10 +20,14 @@ interface IDesignerState {
   useInternalItems: boolean;
   color: string;
   area: IPosition[];
+  mode?: DesignerItem["type"];
+  lastImageInfo?: IImageInfo;
+  updatingItem?: DesignerItem;
+  selectedItem?: DesignerItem;
 }
 
 class Designer extends React.Component<IDesignerProps, IDesignerState> {
-  public static defaultProps:DeepPartial<IDesignerProps> = {
+  public static defaultProps: DeepPartial<IDesignerProps> = {
     itemInitSize: {
       height: 100,
       width: 100
@@ -80,6 +83,12 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     this.handleAddLine = this.handleAddLine.bind(this);
     this.handleAddText = this.handleAddText.bind(this);
     this.handleChangeItem = this.handleChangeItem.bind(this);
+    this.handleRemoveItem = this.handleRemoveItem.bind(this);
+    this.handleSelectItem = this.handleSelectItem.bind(this);
+
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
   }
 
   public componentDidUpdate(prevProps: IDesignerProps) {
@@ -92,7 +101,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   }
 
   public render() {
-    const { classes, items, area } = this.state;
+    const { classes, items, area, mode, updatingItem, selectedItem } = this.state;
 
     const { paperSize } = this.props;
 
@@ -105,6 +114,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           onAddRectangle={this.handleAddRectangle}
           onAddLine={this.handleAddLine}
           onAddText={this.handleAddText}
+          mode={mode}
         />
         <div className={classes.designer.toolOptions.wrapper}>Toolbar</div>
         <Paper
@@ -113,9 +123,16 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           width={paperSize!.width}
           items={items}
           area={area}
-          onDrag={this.handleChangeItem}
-          onResize={this.handleChangeItem}
-          onRotate={this.handleChangeItem}
+          selectedItem={selectedItem}
+          onDragItem={this.handleChangeItem}
+          onResizeItem={this.handleChangeItem}
+          onRotateItem={this.handleChangeItem}
+          onRemoveItem={this.handleRemoveItem}
+          onMouseDown={this.handleMouseDown}
+          onMouseMove={this.handleMouseMove}
+          onMouseUp={this.handleMouseUp}
+          onSelectItem={this.handleSelectItem}
+          cursor={mode||updatingItem?"move":undefined}
         />
       </div>
     );
@@ -127,98 +144,134 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
 
     const items = useInternalItems ? this.state.items : this.props.items;
 
-    const newItems = { ...items, [lastItemId + 1]: {...item,itemId:lastItemId+1} };
+    const newItem = { ...item, itemId: lastItemId + 1 };
 
-    this.setState({ items: newItems, lastItemId: lastItemId + 1 });
+    const newItems = {
+      ...items,
+      [lastItemId + 1]: newItem
+    };
+
+    this.setState({
+      items: newItems,
+      lastItemId: lastItemId + 1,
+      updatingItem: newItem
+    });
 
     if (onChangeItems) {
       onChangeItems(newItems);
     }
   }
 
-  private generatePosition(size: ISize): IPosition {
-    const { paperSize } = this.props;
-
-    return {
-      left: (paperSize!.width - size.width) / 2,
-      top: (paperSize!.height - size.height) / 2
-    };
-  }
-
   private handleAddImage(info: IImageInfo) {
-    const size: ISize = { width: 0, height: 0 };
-    const { itemInitSize } = this.props;
-    const { color } = this.state;
-
-    const expectedRatio = itemInitSize!.height / itemInitSize!.width;
-    const currentRatio = info.size.height / info.size.width;
-
-    if (currentRatio > expectedRatio) {
-      size.height = itemInitSize!.height;
-      size.width = Math.round(
-        (itemInitSize!.height / info.size.height) * info.size.width
-      );
-    } else if (currentRatio < expectedRatio) {
-      size.width = itemInitSize!.width;
-      size.height = Math.round(
-        (itemInitSize!.width / info.size.width) * info.size.height
-      );
-    } else {
-      size.width = 100;
-      size.height = 100;
-    }
-
-    const position = this.generatePosition(size);
-
-    this.addItem({
-      ables:{
-        close: true,
-        color: true,
-        move:true,
-        outline:true,
-        resize:true,
-        rotate:true,
-      },
-      data: info.data,
-      naturalSize: info.size,
-      outlineColor: color,
-      outlineWeight: 0,
-      position,
-      rotate: 0,
-      size,
-      type: "image"
-    });
+    this.setState({ lastImageInfo: info, mode: "image" });
   }
 
   private handleAddCircle() {
-    const { itemInitSize } = this.props;
-    const { color } = this.state;
-
-    this.addItem({
-      ables:{
-        close: true,
-        color: true,
-        move:true,
-        outline:true,
-        resize:true,
-        rotate:true,
-      },
-      color: "transparent",
-      naturalSize: itemInitSize!,
-      outlineColor: color,
-      outlineWeight: 1,
-      position: this.generatePosition(itemInitSize!),
-      rotate: 0,
-      size: itemInitSize!,
-      type: "circle"
-    });
+    this.setState({ mode: "circle" });
   }
 
   private handleAddRectangle() {
-    const { itemInitSize } = this.props;
-    const { color } = this.state;
+    this.setState({ mode: "rectangle" });
+  }
 
-    this.addItem({
+  private handleAddLine() {
+    // const { color } = this.state;
+    // const { itemInitSize } = this.props;
+
+    // this.addItem({
+    //   ables: {
+    //     close: true,
+    //     color: true,
+    //     move: true,
+    //     outline: true,
+    //     resize: false,
+    //     rotate: true
+    //   },
+    //   outlineColor: color,
+    //   outlineWeight: 1,
+    //   position: this.generatePosition({ ...itemInitSize!, height: 2 }),
+    //   rotate: 0,
+    //   type: "line"
+    // });
+    this.setState({ mode: "line" });
+  }
+
+  private handleAddText() {
+    // const { color } = this.state;
+
+    // this.addItem({
+    //   ables: {
+    //     close: true,
+    //     color: true,
+    //     move: true,
+    //     outline: false,
+    //     resize: false,
+    //     rotate: true
+    //   },
+    //   bold: false,
+    //   color,
+    //   fontId: 2,
+    //   fontName: "Sans Serif",
+    //   fontSize: 10,
+    //   italic: false,
+    //   position: this.generatePosition({ width: 200, height: 10 }),
+    //   rotate: 0,
+    //   text: "Click to change text",
+    //   type: "text",
+    //   underline: false
+    // });
+    this.setState({ mode: "text" });
+  }
+
+  private handleChangeItem(item: DesignerItem) {
+    const { useInternalItems } = this.state;
+    const { onChangeItems } = this.props;
+
+    const { items } = useInternalItems ? this.state : this.props;
+
+    if (typeof item.itemId === "undefined") {
+      return;
+    }
+
+    items[item.itemId] = { ...item };
+
+    if (useInternalItems) {
+      this.setState({ items });
+    } else {
+      onChangeItems(items);
+    }
+  }
+
+  private handleRemoveItem(item: DesignerItem) {
+    const { useInternalItems } = this.state;
+    const { onChangeItems } = this.props;
+    if (typeof item.itemId !== "undefined") {
+      const { items } = useInternalItems ? this.state : this.props;
+
+      delete items[item.itemId];
+
+      if (useInternalItems) {
+        this.setState({ items, updatingItem:undefined });
+      } else {
+        this.setState({updatingItem:undefined},()=>{
+          onChangeItems(items);
+        });
+      }
+    }
+  }
+
+  private handleSelectItem(item?:DesignerItem){
+    this.setState({selectedItem:item});
+  }
+
+  private handleMouseDown(position: IPosition) {
+    const { mode, color, lastImageInfo } = this.state;
+
+    if (!mode) {
+      return;
+    }
+
+    const basicItemDetails = {
       ables: {
         close: true,
         color: true,
@@ -227,81 +280,71 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
         resize: true,
         rotate: true
       },
-      color: "transparent",
-      naturalSize: itemInitSize!,
+      naturalSize: { width: 4, height: 4 },
       outlineColor: color,
       outlineWeight: 1,
-      position: this.generatePosition(itemInitSize!),
+      position,
       rotate: 0,
-      size: itemInitSize!,
-      type: "rectangle"
-    });
-  }
+      size: { width: 4, height: 4 }
+    };
 
-  private handleAddLine() {
-    const { color } = this.state;
-    const { itemInitSize } = this.props;
-
-    this.addItem({
-      ables: {
-        close: true,
-        color: true,
-        move: true,
-        outline: true,
-        resize: false,
-        rotate: true
-      },
-      outlineColor: color,
-      outlineWeight: 1,
-      position: this.generatePosition({ ...itemInitSize!, height: 2 }),
-      rotate: 0,
-      type: "line"
-    });
-  }
-
-  private handleAddText() {
-    const { color } = this.state;
-
-    this.addItem({
-      ables: {
-        close: true,
-        color: true,
-        move: true,
-        outline: false,
-        resize: false,
-        rotate: true
-      },
-      bold: false,
-      color,
-      fontId: 2,
-      fontName: "Sans Serif",
-      fontSize: 10,
-      italic: false,
-      position: this.generatePosition({ width: 200, height: 10 }),
-      rotate: 0,
-      text: "Click to change text",
-      type: "text",
-      underline: false
-    });
-  }
-
-  private handleChangeItem(item:DesignerItem){
-    const {useInternalItems} = this.state;
-    const {onChangeItems} = this.props;
-
-    const {items} = useInternalItems?this.state:this.props;
-
-    if(typeof item.itemId ==="undefined"){
-      return;
+    switch (mode) {
+      case "circle":
+        this.addItem({
+          ...basicItemDetails,
+          color: "transparent",
+          type: "circle"
+        });
+        break;
+      case "rectangle":
+        this.addItem({
+          ...basicItemDetails,
+          color: "transparent",
+          type: "rectangle"
+        });
+        break;
+      case "image":
+        this.addItem({
+          ...basicItemDetails,
+          data: lastImageInfo!.data,
+          naturalSize: lastImageInfo!.size,
+          type: "image"
+        });
+        break;
+      default:
+        break;
     }
-    
-    items[item.itemId] = {...item};
 
-    if(useInternalItems){
-      this.setState({items});
-    } else {
-      onChangeItems(items);
+    this.setState({ mode: undefined, lastImageInfo: undefined });
+  }
+  private handleMouseMove(position: IPosition) {
+    const { updatingItem, items } = this.state;
+
+    if (updatingItem) {
+      if (
+        (updatingItem.type === "rectangle" ||
+          updatingItem.type === "image" ||
+          updatingItem.type === "circle") &&
+        typeof updatingItem.itemId === "number"
+      ) {
+
+        this.setState({
+          items: {
+            ...items,
+            [updatingItem.itemId]: {
+              ...updatingItem,
+              size: {
+                height: position.top - updatingItem.position.top,
+                width: position.left - updatingItem.position.left
+              }
+            }
+          }
+        });
+      }
     }
+  }
+  private handleMouseUp(position: IPosition) {
+    this.setState({ updatingItem:undefined,mode: undefined });
   }
 }
 

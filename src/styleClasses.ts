@@ -19,7 +19,10 @@ const styleClasses: IStyleClasses = {
       button: {
         icon: "rdc-toolbox-button-icon",
         tooltip: "rdc-toolbox-button-tooltip",
-        wrapper: "rdc-toolbox-button"
+        wrapper: {
+          active:"rdc-toolbox-button-active",
+          default: "rdc-toolbox-button-default"
+        }
       },
       switch: {
         icon: "rdc-toolbox-switch-icon",
