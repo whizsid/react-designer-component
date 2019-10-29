@@ -21,13 +21,20 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
   }
 
   public render() {
-    const { classes, onAddCircle, onAddRectangle, onAddLine, onAddText, mode } = this.props;
+    const {
+      classes,
+      onAddCircle,
+      onAddRectangle,
+      onAddLine,
+      onAddText,
+      mode
+    } = this.props;
     return (
       <div className={classes.wrapper}>
         <Button
           onClick={this.handleClickImageInput}
           icon={<ImageIcon />}
-          active={mode&&mode==="image"}
+          active={mode && mode === "image"}
           classes={classes.button}
           tooltip={"Click to add an image"}
         />
@@ -35,28 +42,28 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
           onClick={onAddCircle}
           icon={<CircleIcon />}
           classes={classes.button}
-          active={mode&&mode==="circle"}
+          active={mode && mode === "circle"}
           tooltip={"Click to add a circle"}
         />
         <Button
           onClick={onAddRectangle}
           icon={<BoxIcon />}
           classes={classes.button}
-          active={mode&&mode==="rectangle"}
+          active={mode && mode === "rectangle"}
           tooltip={"Click to add a rectangle"}
         />
         <Button
           onClick={onAddLine}
           icon={<LineIcon />}
           classes={classes.button}
-          active={mode&&mode==="line"}
+          active={mode && mode === "line"}
           tooltip={"Click to add a straight line"}
         />
         <Button
           onClick={onAddText}
           icon={<TextIcon />}
           classes={classes.button}
-          active={mode&&mode==="text"}
+          active={mode && mode === "text"}
           tooltip={"Click to add text"}
         />
         <input
@@ -68,7 +75,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
     );
   }
 
-  private handleChangeImage=(e: React.ChangeEvent<HTMLInputElement>) =>{
+  private handleChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     const { onAddImage } = this.props;
 
@@ -99,7 +106,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
         };
       };
     }
-  }
+  };
 
   private handleClickImageInput = () => {
     const { imageInput } = this.state;
@@ -107,13 +114,13 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
     if (imageInput) {
       imageInput.click();
     }
-  }
+  };
 
   private setImageInputRef = (el: HTMLInputElement | null) => {
     if (el) {
       this.setState({ imageInput: el });
     }
-  }
+  };
 }
 
 export default ToolBox;

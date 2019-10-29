@@ -367,7 +367,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       }
     }
   };
-  private handleMouseUp = (position: IPosition) => {
+  private handleMouseUp = (/*position: IPosition*/) => {
     this.setState({ updatingItem: undefined, mode: undefined });
   };
 }
