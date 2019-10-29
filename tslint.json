@@ -15,12 +15,14 @@
         "no-unused-variable": true,
         "semicolon": [
             true,
-            "always"
+            "always",
+            "strict-bound-class-methods"
         ],
         "no-submodule-imports": false,
         "no-implicit-dependencies": false,
         "no-console": false,
-        "member-access": true
+        "member-access": true,
+        "only-arrow-functions": true
     },
     "rulesDirectory": []
 }

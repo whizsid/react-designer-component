@@ -16,15 +16,15 @@ export interface IPosition {
 
 export interface IItem {
   position: IPosition;
-  itemId?: number;  
-  ables:{
-    rotate:boolean;
+  itemId?: number;
+  ables: {
+    rotate: boolean;
     move: boolean;
     resize: boolean;
     close: boolean;
     outline: boolean;
     color: boolean;
-  }
+  };
 }
 
 export interface IResizable {
@@ -62,7 +62,8 @@ export type TextItem = IHasRotate &
 export type LineItem = IHasRotate &
   IItem &
   IHasOutline &
-  IHasRotate & {
+  IHasRotate &
+  IResizable & {
     type: "line";
   };
 
@@ -111,7 +112,7 @@ export type DesignerItem =
   | ImageItem
   | BrushItem;
 
-export type ResizableItem = CircleItem | RectangleItem | ImageItem;
+export type ResizableItem = CircleItem | RectangleItem | ImageItem | LineItem;
 
 export type RotatableItem =
   | TextItem
@@ -163,7 +164,7 @@ export interface IToolBoxClasses {
 
 export interface IPaperClasses {
   wrapper: string;
-  drawingArea: IPaperDrawingAreaClasses ;
+  drawingArea: IPaperDrawingAreaClasses;
 }
 
 export interface IPaperDrawingAreaClasses {
@@ -257,9 +258,9 @@ export interface IPaperProps {
   onRotateItem?: (item: RotatableItem) => void;
   onRemoveItem?: (item: DesignerItem) => void;
   onSelectItem?: (item?: DesignerItem) => void;
-  onMouseDown?:(position:IPosition)=>void;
-  onMouseMove?:(position:IPosition)=>void;
-  onMouseUp?:(position:IPosition)=>void;
+  onMouseDown?: (position: IPosition) => void;
+  onMouseMove?: (position: IPosition) => void;
+  onMouseUp?: (position: IPosition) => void;
 }
 
 export interface IIconProps {

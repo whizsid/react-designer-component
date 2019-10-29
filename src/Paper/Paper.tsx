@@ -7,6 +7,7 @@ import {
   RotatableItem
 } from "../types";
 import Basic from "./Basic";
+import Line from "./Line";
 
 interface IState {
   target?: HTMLElement;
@@ -20,19 +21,9 @@ class Paper extends React.Component<IPaperProps, IState> {
     super(props);
 
     this.state = { mouseDown: false };
-
-    this.handleDragItem = this.handleDragItem.bind(this);
-    this.handleResizeItem = this.handleResizeItem.bind(this);
-    this.handleRotateItem = this.handleRotateItem.bind(this);
-    this.renderItem = this.renderItem.bind(this);
-
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
-    this.handleMouseLeave = this.handleMouseLeave.bind(this);
   }
 
-  public renderItem(item: DesignerItem) {
+  public renderItem = (item: DesignerItem) => {
     const { classes } = this.props;
     const { selectedItem } = this.props;
 
@@ -76,10 +67,21 @@ class Paper extends React.Component<IPaperProps, IState> {
             onRemove={this.handleRemoveItem(item)}
           />
         );
+      case "line":
+        return (
+          <Line
+            {...item}
+            key={item.itemId}
+            classes={classes.drawingArea.item}
+            selected={!!selectedItem && selectedItem.itemId === item.itemId}
+            onSelect={this.handleSelectItem(item)}
+            onRemove={this.handleRemoveItem(item)}
+          />
+        );
       default:
         return null;
     }
-  }
+  };
 
   public render() {
     const { classes, height, width, area, items, cursor } = this.props;
@@ -124,7 +126,7 @@ class Paper extends React.Component<IPaperProps, IState> {
           style={{
             clipPath,
             cursor,
-            display:"block",
+            display: "block",
             height,
             overflow: "hidden",
             position: "relative",
@@ -142,7 +144,7 @@ class Paper extends React.Component<IPaperProps, IState> {
     );
   }
 
-  protected handleSelectItem(item: DesignerItem) {
+  protected handleSelectItem = (item: DesignerItem) => {
     return (e: React.MouseEvent<HTMLElement>) => {
       const { onSelectItem } = this.props;
 
@@ -152,9 +154,9 @@ class Paper extends React.Component<IPaperProps, IState> {
         this.setState({ target });
       }
     };
-  }
+  };
 
-  protected handleDragItem(e: OnDrag) {
+  protected handleDragItem = (e: OnDrag) => {
     const { onDragItem, items } = this.props;
     const { selectedItem } = this.props;
 
@@ -168,9 +170,9 @@ class Paper extends React.Component<IPaperProps, IState> {
         position: { left: e.left, top: e.top }
       });
     }
-  }
+  };
 
-  protected handleResizeItem(e: OnResize) {
+  protected handleResizeItem = (e: OnResize) => {
     const { onResizeItem, items } = this.props;
     const { selectedItem } = this.props;
 
@@ -198,10 +200,10 @@ class Paper extends React.Component<IPaperProps, IState> {
 
       onResizeItem(modedItem as ResizableItem);
     }
-  }
+  };
 
-  protected handleRotateItem(e: OnRotate) {
-    const { onRotateItem, items ,selectedItem} = this.props;
+  protected handleRotateItem = (e: OnRotate) => {
+    const { onRotateItem, items, selectedItem } = this.props;
 
     if (
       onRotateItem &&
@@ -211,29 +213,29 @@ class Paper extends React.Component<IPaperProps, IState> {
       const modedItem = { ...items[selectedItem.itemId], rotate: e.rotate };
       onRotateItem(modedItem as RotatableItem);
     }
-  }
+  };
 
-  protected handleRemoveItem(item: DesignerItem) {
+  protected handleRemoveItem = (item: DesignerItem) => {
     return () => {
       const { onRemoveItem } = this.props;
 
       if (onRemoveItem) {
-        this.setState({target:undefined},()=>{
+        this.setState({ target: undefined }, () => {
           onRemoveItem(item);
         });
       }
     };
-  }
+  };
 
-  protected handleMouseDown(e: React.MouseEvent<HTMLDivElement>) {
-    const { onMouseDown, selectedItem , onSelectItem} = this.props;
+  protected handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { onMouseDown, selectedItem, onSelectItem } = this.props;
     this.setState({ mouseDown: true });
 
     const boundingBox = e.currentTarget.getBoundingClientRect();
     const target = e.target as HTMLElement;
 
-    if(target.tagName==="SPAN"&&selectedItem&&onSelectItem){
-      this.setState({target:undefined},()=>{
+    if (target.tagName === "SPAN" && selectedItem && onSelectItem) {
+      this.setState({ target: undefined }, () => {
         onSelectItem(undefined);
       });
     }
@@ -244,9 +246,9 @@ class Paper extends React.Component<IPaperProps, IState> {
         top: e.clientY - boundingBox.top
       });
     }
-  }
+  };
 
-  protected handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+  protected handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { mouseDown } = this.state;
     const { onMouseMove } = this.props;
 
@@ -258,9 +260,9 @@ class Paper extends React.Component<IPaperProps, IState> {
         top: e.clientY - boundingBox.top
       });
     }
-  }
+  };
 
-  protected handleMouseUp(e: React.MouseEvent<HTMLDivElement>) {
+  protected handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
     const { onMouseUp } = this.props;
 
     const boundingBox = e.currentTarget.getBoundingClientRect();
@@ -272,9 +274,9 @@ class Paper extends React.Component<IPaperProps, IState> {
         top: e.clientY - boundingBox.top
       });
     }
-  }
+  };
 
-  protected handleMouseLeave(e: React.MouseEvent<HTMLDivElement>) {
+  protected handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     const { mouseDown } = this.state;
     const { onMouseUp } = this.props;
 
@@ -290,7 +292,7 @@ class Paper extends React.Component<IPaperProps, IState> {
         });
       }
     }
-  }
+  };
 }
 
 export default Paper;

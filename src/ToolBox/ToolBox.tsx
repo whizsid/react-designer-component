@@ -18,10 +18,6 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
     this.state = {
       imageInput: null
     };
-
-    this.setImageInputRef = this.setImageInputRef.bind(this);
-    this.handleClickImageInput = this.handleClickImageInput.bind(this);
-    this.handleChangeImage = this.handleChangeImage.bind(this);
   }
 
   public render() {
@@ -72,7 +68,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
     );
   }
 
-  private handleChangeImage(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChangeImage=(e: React.ChangeEvent<HTMLInputElement>) =>{
     const files = e.target.files;
     const { onAddImage } = this.props;
 
@@ -105,7 +101,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
     }
   }
 
-  private handleClickImageInput() {
+  private handleClickImageInput = () => {
     const { imageInput } = this.state;
 
     if (imageInput) {
@@ -113,7 +109,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
     }
   }
 
-  private setImageInputRef(el: HTMLInputElement | null) {
+  private setImageInputRef = (el: HTMLInputElement | null) => {
     if (el) {
       this.setState({ imageInput: el });
     }

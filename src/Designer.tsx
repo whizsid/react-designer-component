@@ -76,19 +76,6 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       lastItemId: -1,
       useInternalItems: !!props.items
     };
-
-    this.handleAddImage = this.handleAddImage.bind(this);
-    this.handleAddCircle = this.handleAddCircle.bind(this);
-    this.handleAddRectangle = this.handleAddRectangle.bind(this);
-    this.handleAddLine = this.handleAddLine.bind(this);
-    this.handleAddText = this.handleAddText.bind(this);
-    this.handleChangeItem = this.handleChangeItem.bind(this);
-    this.handleRemoveItem = this.handleRemoveItem.bind(this);
-    this.handleSelectItem = this.handleSelectItem.bind(this);
-
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
   }
 
   public componentDidUpdate(prevProps: IDesignerProps) {
@@ -101,7 +88,14 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   }
 
   public render() {
-    const { classes, items, area, mode, updatingItem, selectedItem } = this.state;
+    const {
+      classes,
+      items,
+      area,
+      mode,
+      updatingItem,
+      selectedItem
+    } = this.state;
 
     const { paperSize } = this.props;
 
@@ -132,7 +126,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           onMouseMove={this.handleMouseMove}
           onMouseUp={this.handleMouseUp}
           onSelectItem={this.handleSelectItem}
-          cursor={mode||updatingItem?"move":undefined}
+          cursor={mode || updatingItem ? "move" : undefined}
         />
       </div>
     );
@@ -162,19 +156,19 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     }
   }
 
-  private handleAddImage(info: IImageInfo) {
+  private handleAddImage = (info: IImageInfo) => {
     this.setState({ lastImageInfo: info, mode: "image" });
-  }
+  };
 
-  private handleAddCircle() {
+  private handleAddCircle = () => {
     this.setState({ mode: "circle" });
-  }
+  };
 
-  private handleAddRectangle() {
+  private handleAddRectangle = () => {
     this.setState({ mode: "rectangle" });
-  }
+  };
 
-  private handleAddLine() {
+  private handleAddLine = () => {
     // const { color } = this.state;
     // const { itemInitSize } = this.props;
 
@@ -194,9 +188,9 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     //   type: "line"
     // });
     this.setState({ mode: "line" });
-  }
+  };
 
-  private handleAddText() {
+  private handleAddText = () => {
     // const { color } = this.state;
 
     // this.addItem({
@@ -221,9 +215,9 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     //   underline: false
     // });
     this.setState({ mode: "text" });
-  }
+  };
 
-  private handleChangeItem(item: DesignerItem) {
+  private handleChangeItem = (item: DesignerItem) => {
     const { useInternalItems } = this.state;
     const { onChangeItems } = this.props;
 
@@ -240,9 +234,9 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     } else {
       onChangeItems(items);
     }
-  }
+  };
 
-  private handleRemoveItem(item: DesignerItem) {
+  private handleRemoveItem = (item: DesignerItem) => {
     const { useInternalItems } = this.state;
     const { onChangeItems } = this.props;
     if (typeof item.itemId !== "undefined") {
@@ -251,20 +245,20 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       delete items[item.itemId];
 
       if (useInternalItems) {
-        this.setState({ items, updatingItem:undefined });
+        this.setState({ items, updatingItem: undefined });
       } else {
-        this.setState({updatingItem:undefined},()=>{
+        this.setState({ updatingItem: undefined }, () => {
           onChangeItems(items);
         });
       }
     }
-  }
+  };
 
-  private handleSelectItem(item?:DesignerItem){
-    this.setState({selectedItem:item});
-  }
+  private handleSelectItem = (item?: DesignerItem) => {
+    this.setState({ selectedItem: item });
+  };
 
-  private handleMouseDown(position: IPosition) {
+  private handleMouseDown = (position: IPosition) => {
     const { mode, color, lastImageInfo } = this.state;
 
     if (!mode) {
@@ -311,13 +305,19 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           type: "image"
         });
         break;
+      case "line":
+        this.addItem({
+          ...basicItemDetails,
+          type: "line"
+        });
+        break;
       default:
         break;
     }
 
     this.setState({ mode: undefined, lastImageInfo: undefined });
-  }
-  private handleMouseMove(position: IPosition) {
+  };
+  private handleMouseMove = (position: IPosition) => {
     const { updatingItem, items } = this.state;
 
     if (updatingItem) {
@@ -327,7 +327,6 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           updatingItem.type === "circle") &&
         typeof updatingItem.itemId === "number"
       ) {
-
         this.setState({
           items: {
             ...items,
@@ -340,12 +339,37 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
             }
           }
         });
+      } else if (
+        updatingItem.type === "line" &&
+        typeof updatingItem.itemId === "number"
+      ) {
+        this.setState({
+          items: {
+            ...items,
+            [updatingItem.itemId]: {
+              ...updatingItem,
+              rotate:
+                Math.atan2(
+                  position.top - updatingItem.position.top,
+                  position.left - updatingItem.position.left
+                ) *
+                (180 / Math.PI),
+              size: {
+                ...updatingItem,
+                width: Math.sqrt(
+                  Math.pow(updatingItem.position.left - position.left, 2) +
+                    Math.pow(updatingItem.position.top - position.top, 2)
+                )
+              }
+            }
+          }
+        });
       }
     }
-  }
-  private handleMouseUp(position: IPosition) {
-    this.setState({ updatingItem:undefined,mode: undefined });
-  }
+  };
+  private handleMouseUp = (position: IPosition) => {
+    this.setState({ updatingItem: undefined, mode: undefined });
+  };
 }
 
 export default Designer;
