@@ -8,6 +8,7 @@ import {
 } from "../types";
 import Basic from "./Basic";
 import Line from "./Line";
+import Text from "./Text";
 
 interface IState {
   target?: HTMLElement;
@@ -27,16 +28,20 @@ class Paper extends React.Component<IPaperProps, IState> {
     const { classes } = this.props;
     const { selectedItem } = this.props;
 
+    const commonProps = {
+      classes: classes.drawingArea.item,
+      key: item.itemId,
+      onRemove: this.handleRemoveItem(item),
+      onSelect: this.handleSelectItem(item),
+      selected: !!selectedItem && selectedItem.itemId === item.itemId
+    };
+
     switch (item.type) {
       case "image":
         return (
           <Basic
             {...item}
-            key={item.itemId}
-            classes={classes.drawingArea.item}
-            selected={!!selectedItem && selectedItem.itemId === item.itemId}
-            onSelect={this.handleSelectItem(item)}
-            onRemove={this.handleRemoveItem(item)}
+            {...commonProps}
             styles={{
               backgroundImage: "url( " + item.data + ")"
             }}
@@ -46,38 +51,18 @@ class Paper extends React.Component<IPaperProps, IState> {
         return (
           <Basic
             {...item}
-            key={item.itemId}
-            classes={classes.drawingArea.item}
-            selected={!!selectedItem && selectedItem.itemId === item.itemId}
-            onSelect={this.handleSelectItem(item)}
-            onRemove={this.handleRemoveItem(item)}
+            {...commonProps}
             styles={{
               borderRadius: "100%"
             }}
           />
         );
       case "rectangle":
-        return (
-          <Basic
-            {...item}
-            key={item.itemId}
-            classes={classes.drawingArea.item}
-            selected={!!selectedItem && selectedItem.itemId === item.itemId}
-            onSelect={this.handleSelectItem(item)}
-            onRemove={this.handleRemoveItem(item)}
-          />
-        );
+        return <Basic {...item} {...commonProps} />;
       case "line":
-        return (
-          <Line
-            {...item}
-            key={item.itemId}
-            classes={classes.drawingArea.item}
-            selected={!!selectedItem && selectedItem.itemId === item.itemId}
-            onSelect={this.handleSelectItem(item)}
-            onRemove={this.handleRemoveItem(item)}
-          />
-        );
+        return <Line {...item} {...commonProps} />;
+      case "text":
+        return <Text {...item} {...commonProps} />;
       default:
         return null;
     }
@@ -105,7 +90,7 @@ class Paper extends React.Component<IPaperProps, IState> {
             target={target}
             keepRatio={false}
             origin={true}
-            draggable={selectedItem.ables.resize}
+            draggable={selectedItem.ables.move}
             snappable={true}
             transformOrigin="% %"
             verticalGuidelines={[100, 200, 400, 500]}

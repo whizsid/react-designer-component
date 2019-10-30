@@ -48,7 +48,7 @@ export interface IHasOutline {
 export type TextItem = IHasRotate &
   IItem &
   IHasColor &
-  IHasRotate & {
+  {
     text: string;
     fontName: string;
     fontId: string | number;

@@ -169,24 +169,6 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   };
 
   private handleAddLine = () => {
-    // const { color } = this.state;
-    // const { itemInitSize } = this.props;
-
-    // this.addItem({
-    //   ables: {
-    //     close: true,
-    //     color: true,
-    //     move: true,
-    //     outline: true,
-    //     resize: false,
-    //     rotate: true
-    //   },
-    //   outlineColor: color,
-    //   outlineWeight: 1,
-    //   position: this.generatePosition({ ...itemInitSize!, height: 2 }),
-    //   rotate: 0,
-    //   type: "line"
-    // });
     this.setState({ mode: "line" });
   };
 
@@ -265,14 +247,18 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       return;
     }
 
+    const ables = {
+      close: true,
+      color: true,
+      move: true,
+      outline: true,
+      resize: true,
+      rotate: true
+    };
+
     const basicItemDetails = {
       ables: {
-        close: true,
-        color: true,
-        move: true,
-        outline: true,
-        resize: true,
-        rotate: true
+        ...ables
       },
       naturalSize: { width: 4, height: 4 },
       outlineColor: color,
@@ -310,6 +296,27 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           ...basicItemDetails,
           type: "line"
         });
+        break;
+      case "text":
+        this.addItem({
+          ables:{
+            ...ables,
+            outline: false,
+            resize: false
+          },
+          bold: false,
+          color,
+          fontId: 1,
+          fontName: "Sans Serif",
+          fontSize: 16,
+          italic: false,
+          position,
+          rotate:0,
+          text:"Click to add a text",
+          type: "text",
+          underline: false
+        });
+        this.setState({updatingItem:undefined});
         break;
       default:
         break;
