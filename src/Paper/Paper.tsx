@@ -3,8 +3,7 @@ import Moveable, { OnDrag, OnResize, OnRotate } from "react-moveable";
 import {
   DesignerItem,
   IPaperProps,
-  ResizableItem,
-  RotatableItem
+  TextItem
 } from "../types";
 import Basic from "./Basic";
 import Line from "./Line";
@@ -62,7 +61,7 @@ class Paper extends React.Component<IPaperProps, IState> {
       case "line":
         return <Line {...item} {...commonProps} />;
       case "text":
-        return <Text {...item} {...commonProps} />;
+        return <Text {...item} {...commonProps} onChangeText={this.handleChangeText(item)} />;
       default:
         return null;
     }
@@ -142,15 +141,15 @@ class Paper extends React.Component<IPaperProps, IState> {
   };
 
   protected handleDragItem = (e: OnDrag) => {
-    const { onDragItem, items } = this.props;
+    const { onChangeItem, items } = this.props;
     const { selectedItem } = this.props;
 
     if (
-      onDragItem &&
+      onChangeItem &&
       selectedItem &&
       typeof selectedItem.itemId !== "undefined"
     ) {
-      onDragItem({
+      onChangeItem({
         ...items[selectedItem.itemId],
         position: { left: e.left, top: e.top }
       });
@@ -158,11 +157,11 @@ class Paper extends React.Component<IPaperProps, IState> {
   };
 
   protected handleResizeItem = (e: OnResize) => {
-    const { onResizeItem, items } = this.props;
+    const { onChangeItem, items } = this.props;
     const { selectedItem } = this.props;
 
     if (
-      onResizeItem &&
+      onChangeItem &&
       selectedItem &&
       typeof selectedItem.itemId !== "undefined"
     ) {
@@ -183,20 +182,20 @@ class Paper extends React.Component<IPaperProps, IState> {
         size: { height: e.height, width: e.width }
       };
 
-      onResizeItem(modedItem as ResizableItem);
+      onChangeItem(modedItem);
     }
   };
 
   protected handleRotateItem = (e: OnRotate) => {
-    const { onRotateItem, items, selectedItem } = this.props;
+    const { onChangeItem, items, selectedItem } = this.props;
 
     if (
-      onRotateItem &&
+      onChangeItem &&
       selectedItem &&
       typeof selectedItem.itemId !== "undefined"
     ) {
       const modedItem = { ...items[selectedItem.itemId], rotate: e.rotate };
-      onRotateItem(modedItem as RotatableItem);
+      onChangeItem(modedItem);
     }
   };
 
@@ -277,6 +276,16 @@ class Paper extends React.Component<IPaperProps, IState> {
         });
       }
     }
+  };
+
+  protected handleChangeText = (item:TextItem) => {
+    return (value?:string)=>{
+      const {onChangeItem} = this.props;
+      if(value&&onChangeItem){
+
+        onChangeItem({...item,text:value});
+      }
+    };
   };
 }
 

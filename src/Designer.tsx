@@ -118,9 +118,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           items={items}
           area={area}
           selectedItem={selectedItem}
-          onDragItem={this.handleChangeItem}
-          onResizeItem={this.handleChangeItem}
-          onRotateItem={this.handleChangeItem}
+          onChangeItem={this.handleChangeItem}
           onRemoveItem={this.handleRemoveItem}
           onMouseDown={this.handleMouseDown}
           onMouseMove={this.handleMouseMove}

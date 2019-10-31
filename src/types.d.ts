@@ -253,9 +253,7 @@ export interface IPaperProps {
   selectedItem?: DesignerItem;
   area: IPosition[];
   cursor?: React.CSSProperties["cursor"];
-  onDragItem?: (item: DesignerItem) => void;
-  onResizeItem?: (item: ResizableItem) => void;
-  onRotateItem?: (item: RotatableItem) => void;
+  onChangeItem?: (item: DesignerItem) => void;
   onRemoveItem?: (item: DesignerItem) => void;
   onSelectItem?: (item?: DesignerItem) => void;
   onMouseDown?: (position: IPosition) => void;
