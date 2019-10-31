@@ -1,13 +1,10 @@
 import * as React from "react";
 import Moveable, { OnDrag, OnResize, OnRotate } from "react-moveable";
-import {
-  DesignerItem,
-  IPaperProps,
-  TextItem
-} from "../types";
+import { DesignerItem, IPaperProps, TextItem } from "../types";
 import Basic from "./Basic";
 import Line from "./Line";
 import Text from "./Text";
+import Brush from "./Brush";
 
 interface IState {
   target?: HTMLElement;
@@ -61,7 +58,15 @@ class Paper extends React.Component<IPaperProps, IState> {
       case "line":
         return <Line {...item} {...commonProps} />;
       case "text":
-        return <Text {...item} {...commonProps} onChangeText={this.handleChangeText(item)} />;
+        return (
+          <Text
+            {...item}
+            {...commonProps}
+            onChangeText={this.handleChangeText(item)}
+          />
+        );
+      case "brush":
+        return <Brush {...item} {...commonProps} />;
       default:
         return null;
     }
@@ -132,7 +137,7 @@ class Paper extends React.Component<IPaperProps, IState> {
     return (e: React.MouseEvent<HTMLElement>) => {
       const { onSelectItem } = this.props;
 
-      const target = e.target as HTMLElement;
+      const target = e.currentTarget as HTMLElement;
       if (target.tagName !== "P" && onSelectItem) {
         onSelectItem(item);
         this.setState({ target });
@@ -278,12 +283,11 @@ class Paper extends React.Component<IPaperProps, IState> {
     }
   };
 
-  protected handleChangeText = (item:TextItem) => {
-    return (value?:string)=>{
-      const {onChangeItem} = this.props;
-      if(value&&onChangeItem){
-
-        onChangeItem({...item,text:value});
+  protected handleChangeText = (item: TextItem) => {
+    return (value?: string) => {
+      const { onChangeItem } = this.props;
+      if (value && onChangeItem) {
+        onChangeItem({ ...item, text: value });
       }
     };
   };

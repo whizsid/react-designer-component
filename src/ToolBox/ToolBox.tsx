@@ -2,6 +2,7 @@ import * as React from "react";
 import BoxIcon from "../Icon/AddBox.svg";
 import CircleIcon from "../Icon/AddCircle.svg";
 import ImageIcon from "../Icon/AddPhotoAlternate.svg";
+import BrushIcon from "../Icon/Brush.svg";
 import LineIcon from "../Icon/LineWeight.svg";
 import TextIcon from "../Icon/TextFormat.svg";
 import { IImageInfo, IToolBoxProps } from "../types";
@@ -27,6 +28,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
       onAddRectangle,
       onAddLine,
       onAddText,
+      onAddBrush,
       mode
     } = this.props;
     return (
@@ -65,6 +67,13 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
           classes={classes.button}
           active={mode && mode === "text"}
           tooltip={"Click to add text"}
+        />
+        <Button
+          onClick={onAddBrush}
+          icon={<BrushIcon />}
+          classes={classes.button}
+          active={mode && mode==="brush"}
+          tooltip={"Click to toggle to brush mode"}
         />
         <input
           onChange={this.handleChangeImage}

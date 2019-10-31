@@ -47,8 +47,7 @@ export interface IHasOutline {
 
 export type TextItem = IHasRotate &
   IItem &
-  IHasColor &
-  {
+  IHasColor & {
     text: string;
     fontName: string;
     fontId: string | number;
@@ -98,10 +97,11 @@ export type ImageItem = IHasRotate &
     data: string;
   };
 
-export type BrushItem = IHasColor &
-  IHasOutline &
-  IItem & {
+export type BrushItem = IHasOutline &
+  IItem &
+  IHasRotate & {
     type: "brush";
+    positions: IPosition[];
   };
 
 export type DesignerItem =
@@ -227,6 +227,7 @@ export interface IToolBoxProps {
   onAddRectangle?: (e: React.MouseEvent) => void;
   onAddLine?: (e: React.MouseEvent) => void;
   onAddText?: (e: React.MouseEvent) => void;
+  onAddBrush?: (e: React.MouseEvent) => void;
 }
 
 export interface IToolBoxButtonProps {

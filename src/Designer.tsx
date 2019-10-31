@@ -6,6 +6,7 @@ import styleClasses from "./styleClasses";
 import "./styles.css";
 import ToolBox from "./ToolBox/ToolBox";
 import {
+  BrushItem,
   DesignerItem,
   IDesignerProps,
   IImageInfo,
@@ -108,6 +109,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           onAddRectangle={this.handleAddRectangle}
           onAddLine={this.handleAddLine}
           onAddText={this.handleAddText}
+          onAddBrush={this.handleAddBrush}
           mode={mode}
         />
         <div className={classes.designer.toolOptions.wrapper}>Toolbar</div>
@@ -171,30 +173,11 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   };
 
   private handleAddText = () => {
-    // const { color } = this.state;
-
-    // this.addItem({
-    //   ables: {
-    //     close: true,
-    //     color: true,
-    //     move: true,
-    //     outline: false,
-    //     resize: false,
-    //     rotate: true
-    //   },
-    //   bold: false,
-    //   color,
-    //   fontId: 2,
-    //   fontName: "Sans Serif",
-    //   fontSize: 10,
-    //   italic: false,
-    //   position: this.generatePosition({ width: 200, height: 10 }),
-    //   rotate: 0,
-    //   text: "Click to change text",
-    //   type: "text",
-    //   underline: false
-    // });
     this.setState({ mode: "text" });
+  };
+
+  private handleAddBrush = () => {
+    this.setState({ mode: "brush" });
   };
 
   private handleChangeItem = (item: DesignerItem) => {
@@ -297,7 +280,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
         break;
       case "text":
         this.addItem({
-          ables:{
+          ables: {
             ...ables,
             outline: false,
             resize: false
@@ -309,12 +292,30 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           fontSize: 16,
           italic: false,
           position,
-          rotate:0,
-          text:"Click to add a text",
+          rotate: 0,
+          text: "Click to add a text",
           type: "text",
           underline: false
         });
-        this.setState({updatingItem:undefined});
+        this.setState({ updatingItem: undefined });
+        break;
+      case "brush":
+        this.addItem({
+          ables: {
+            close: true,
+            color: false,
+            move: true,
+            outline: true,
+            resize: false,
+            rotate: true
+          },
+          outlineColor: color,
+          outlineWeight: 1,
+          position,
+          positions: [{ left: 0, top: 0 }],
+          rotate: 0,
+          type: "brush"
+        });
         break;
       default:
         break;
@@ -366,6 +367,31 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
                     Math.pow(updatingItem.position.top - position.top, 2)
                 )
               }
+            }
+          }
+        });
+      } else if (
+        updatingItem.type === "brush" &&
+        typeof updatingItem.itemId === "number"
+      ) {
+        const item = items[updatingItem.itemId] as BrushItem;
+
+        this.setState({
+          items: {
+            ...items,
+            [updatingItem.itemId]: {
+              ...updatingItem,
+              position: {
+                left:
+                  item.position.left > position.left
+                    ? position.left
+                    : item.position.left,
+                top:
+                  item.position.top > position.top
+                    ? position.top
+                    : item.position.top
+              },
+              positions: [...item.positions, position]
             }
           }
         });

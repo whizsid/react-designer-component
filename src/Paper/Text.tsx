@@ -23,11 +23,11 @@ class Text extends React.Component<
           color,
           fontFamily: fontName,
           fontSize,
-          left: position.left,
+          left: position.left - 8,
           padding: 8,
           position: "absolute",
-          top: position.top,
-          transform: "rotate( " + rotate + "deg)",
+          top: position.top - 8,
+          transform: "rotate( " + rotate + "deg)"
         }}
         onClick={this.handleClickWrapper}
       >
@@ -36,6 +36,7 @@ class Text extends React.Component<
           onChange={this.handleChangeText}
           onFocus={this.handleFocusText}
           contentEditable={true}
+          suppressContentEditableWarning={true}
         >
           {text}
         </span>
@@ -53,14 +54,6 @@ class Text extends React.Component<
 
     if (target.tagName === "SPAN") {
       target.focus();
-      const range = document.createRange();
-      range.selectNodeContents(target);
-      const sel = window.getSelection();
-
-      if (sel) {
-        sel.removeAllRanges();
-        sel.addRange(range);
-      }
     } else if (onSelect) {
       onSelect(e);
     }
@@ -73,8 +66,17 @@ class Text extends React.Component<
     onChangeText(e.target.value);
   };
 
-  private handleFocusText = (e: React.FocusEvent<HTMLInputElement>) => {
-    e.target.select();
+  private handleFocusText = (e: React.FocusEvent<HTMLSpanElement>) => {
+    const target = e.target as HTMLSpanElement;
+
+    const range = document.createRange();
+    range.selectNodeContents(target);
+    const sel = window.getSelection();
+
+    if (sel) {
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
   };
 }
 
