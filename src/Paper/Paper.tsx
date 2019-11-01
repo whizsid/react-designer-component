@@ -2,9 +2,9 @@ import * as React from "react";
 import Moveable, { OnDrag, OnResize, OnRotate } from "react-moveable";
 import { DesignerItem, IPaperProps, TextItem } from "../types";
 import Basic from "./Basic";
+import Brush from "./Brush";
 import Line from "./Line";
 import Text from "./Text";
-import Brush from "./Brush";
 
 interface IState {
   target?: HTMLElement;

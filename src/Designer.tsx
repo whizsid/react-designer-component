@@ -312,7 +312,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           outlineColor: color,
           outlineWeight: 1,
           position,
-          positions: [{ left: 0, top: 0 }],
+          positions: [position],
           rotate: 0,
           type: "brush"
         });
@@ -375,6 +375,38 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
         typeof updatingItem.itemId === "number"
       ) {
         const item = items[updatingItem.itemId] as BrushItem;
+        const lastPosition = item.positions[item.positions.length - 1];
+
+        const slope =
+          (position.top - lastPosition.top) /
+          (position.left - lastPosition.left);
+        const positions: IPosition[] = [];
+
+        if (slope !== Infinity && slope !== -1 * Infinity && !isNaN(slope)) {
+          const intercept = lastPosition.top - slope * lastPosition.left;
+
+          if (position.left >= lastPosition.left) {
+            for (let x = lastPosition.left; x <= position.left; x++) {
+              const y = slope * x + intercept;
+              positions.push({ left: x, top: y });
+            }
+          } else {
+            for (let x = lastPosition.left; x >= position.left; x--) {
+              const y = slope * x + intercept;
+              positions.push({ left: x, top: y });
+            }
+          }
+        } else {
+          if (position.top >= lastPosition.top) {
+            for (let y = lastPosition.top; y < position.top; y++) {
+              positions.push({ left: position.left, top: y });
+            }
+          } else {
+            for (let y = lastPosition.top; y > position.top; y--) {
+              positions.push({ left: position.left, top: y });
+            }
+          }
+        }
 
         this.setState({
           items: {
@@ -391,7 +423,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
                     ? position.top
                     : item.position.top
               },
-              positions: [...item.positions, position]
+              positions: [...item.positions, ...positions]
             }
           }
         });

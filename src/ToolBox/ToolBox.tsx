@@ -72,7 +72,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
           onClick={onAddBrush}
           icon={<BrushIcon />}
           classes={classes.button}
-          active={mode && mode==="brush"}
+          active={mode && mode === "brush"}
           tooltip={"Click to toggle to brush mode"}
         />
         <input

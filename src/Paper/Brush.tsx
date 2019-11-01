@@ -23,7 +23,7 @@ class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
 
     const width = Math.abs(position.left - maxLeft.left);
     const height = Math.abs(position.top - maxTop.top);
-    
+
     return (
       <div
         onClick={onSelect}
@@ -42,20 +42,20 @@ class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
             width
           }}
         >
-            {positions.map((pos,key)=>(
-                <span
-                    key={key}
-                    style={{
-                        background: outlineColor,
-                        display: "block",
-                        height: outlineWeight,
-                        left: pos.left - position.left,
-                        position: "absolute",
-                        top: pos.top-position.top,
-                        width: outlineWeight,
-                    }}
-                />
-            ))}
+          {positions.map((pos, key) => (
+            <span
+              key={key}
+              style={{
+                background: outlineColor,
+                display: "block",
+                height: outlineWeight,
+                left: pos.left - position.left,
+                position: "absolute",
+                top: pos.top - position.top,
+                width: outlineWeight
+              }}
+            />
+          ))}
         </div>
       </div>
     );
