@@ -5,7 +5,8 @@ import CloseButton from "./CloseButton";
 
 // Basic item component
 class Basic extends React.Component<
-  ResizableItem & IDesignerItemComponent & { styles?: React.CSSProperties }
+  ResizableItem &
+    IDesignerItemComponent & { styles?: React.CSSProperties; color?: string }
 > {
   public render() {
     const {
@@ -19,7 +20,8 @@ class Basic extends React.Component<
       styles,
       outlineColor,
       outlineWeight,
-      type
+      type,
+      color
     } = this.props;
 
     return (
@@ -27,8 +29,7 @@ class Basic extends React.Component<
         onClick={onSelect}
         className={classnames(classes.wrapper, classes[type])}
         style={{
-          backgroundPosition: "center",
-          backgroundSize: "100% 100%",
+          backgroundColor: color,
           border: "solid " + outlineWeight + "px " + outlineColor,
           height: size.height,
           left: position.left,

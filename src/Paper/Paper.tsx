@@ -39,7 +39,9 @@ class Paper extends React.Component<IPaperProps, IState> {
             {...item}
             {...commonProps}
             styles={{
-              backgroundImage: "url( " + item.data + ")"
+              backgroundImage: "url( " + item.data + ")",
+              backgroundPosition: "center",
+              backgroundSize: "100% 100%"
             }}
           />
         );
@@ -86,7 +88,7 @@ class Paper extends React.Component<IPaperProps, IState> {
     return (
       <div
         className={classes.wrapper}
-        style={{ height,width, position: "relative" }}
+        style={{ height, width, position: "relative" }}
       >
         {typeof selectedItem !== "undefined" ? (
           <Moveable
@@ -138,10 +140,10 @@ class Paper extends React.Component<IPaperProps, IState> {
       const { onSelectItem } = this.props;
 
       const target = e.target as HTMLElement;
-      
+
       if (target.tagName === "DIV" && onSelectItem) {
         onSelectItem(item);
-        this.setState({ target });
+        this.setState({ target: e.currentTarget });
       }
     };
   };
@@ -182,22 +184,27 @@ class Paper extends React.Component<IPaperProps, IState> {
         top -= e.delta[1];
       }
 
-      if(selectedItem.type!=="line" && typeof selectedItem.itemId !== "undefined"){
+      if (
+        selectedItem.type !== "line" &&
+        typeof selectedItem.itemId !== "undefined"
+      ) {
         const modedItem = {
           ...items[selectedItem.itemId],
           position: { left, top },
           size: { height: e.height, width: e.width }
         };
         onChangeItem(modedItem);
-      } else  if(selectedItem.type==="line" && typeof selectedItem.itemId !== "undefined") {
+      } else if (
+        selectedItem.type === "line" &&
+        typeof selectedItem.itemId !== "undefined"
+      ) {
         const modedItem = {
           ...items[selectedItem.itemId],
           position: { left, top },
-          width:e.width,
+          width: e.width
         };
         onChangeItem(modedItem);
       }
-
     }
   };
 

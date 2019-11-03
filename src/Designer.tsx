@@ -6,6 +6,7 @@ import Paper from "./Paper/Paper";
 import styleClasses from "./styleClasses";
 import "./styles.css";
 import ToolBox from "./ToolBox/ToolBox";
+import ToolOptions from "./ToolOptions/ToolOptions";
 import {
   BrushItem,
   DesignerItem,
@@ -21,6 +22,7 @@ interface IDesignerState {
   lastItemId: number;
   useInternalItems: boolean;
   color: string;
+  outlineColor: string;
   area: IPosition[];
   mode?: DesignerItem["type"];
   lastImageInfo?: IImageInfo;
@@ -69,9 +71,10 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     this.state = {
       area,
       classes: merge(classes, styleClasses),
-      color: "#ff0000",
+      color: "#ffffff",
       items: {},
       lastItemId: -1,
+      outlineColor: "#ff0000",
       useInternalItems: !!props.items
     };
   }
@@ -92,13 +95,18 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       area,
       mode,
       updatingItem,
-      selectedItem
+      selectedItem,
+      color,
+      outlineColor
     } = this.state;
 
     const { paperSize, className } = this.props;
 
     return (
-      <div style={{width: paperSize!.width+100}} className={classnames(classes.designer.wrapper, className)}>
+      <div
+        style={{ width: paperSize!.width + 100 }}
+        className={classnames(classes.designer.wrapper, className)}
+      >
         <ToolBox
           classes={classes.designer.toolbox}
           onAddImage={this.handleAddImage}
@@ -109,7 +117,13 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           onAddBrush={this.handleAddBrush}
           mode={mode}
         />
-        <div className={classes.designer.toolOptions.wrapper}>ToolOptions</div>
+        <ToolOptions
+          classes={classes.designer.toolOptions}
+          fillColor={color}
+          outlineColor={outlineColor}
+          onChangeFillColor={this.handleChangeFillColor}
+          onChangeOutlineColor={this.handleChangeOutlineColor}
+        />
         <Paper
           classes={classes.designer.paper}
           height={paperSize!.height}
@@ -219,7 +233,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   };
 
   private handleMouseDown = (position: IPosition) => {
-    const { mode, color, lastImageInfo } = this.state;
+    const { mode, color, lastImageInfo, outlineColor } = this.state;
 
     if (!mode) {
       return;
@@ -239,7 +253,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
         ...ables
       },
       naturalSize: { width: 4, height: 4 },
-      outlineColor: color,
+      outlineColor,
       outlineWeight: 1,
       position,
       rotate: 0,
@@ -250,14 +264,14 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       case "circle":
         this.addItem({
           ...basicItemDetails,
-          color: "transparent",
+          color,
           type: "circle"
         });
         break;
       case "rectangle":
         this.addItem({
           ...basicItemDetails,
-          color: "transparent",
+          color,
           type: "rectangle"
         });
         break;
@@ -275,7 +289,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
             ...ables
           },
           naturalWidth: 4,
-          outlineColor: color,
+          outlineColor,
           outlineWeight: 1,
           position,
           rotate: 0,
@@ -442,6 +456,52 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   };
   private handleMouseUp = (/*position: IPosition*/) => {
     this.setState({ updatingItem: undefined, mode: undefined });
+  };
+
+  private handleChangeFillColor = (color: string) => {
+    const { selectedItem, items } = this.state;
+
+    if (
+      selectedItem &&
+      (selectedItem.type === "circle" ||
+        selectedItem.type === "rectangle" ||
+        selectedItem.type === "text") &&
+      typeof selectedItem.itemId === "number"
+    ) {
+      this.setState({
+        items: {
+          ...items,
+          [selectedItem.itemId]: {
+            ...items[selectedItem.itemId],
+            color
+          }
+        }
+      });
+    }
+
+    this.setState({ color });
+  };
+
+  private handleChangeOutlineColor = (color: string) => {
+    const { selectedItem, items } = this.state;
+
+    if (
+      selectedItem &&
+      selectedItem.type !== "text" &&
+      typeof selectedItem.itemId === "number"
+    ) {
+      this.setState({
+        items: {
+          ...items,
+          [selectedItem.itemId]: {
+            ...items[selectedItem.itemId],
+            outlineColor:color
+          }
+        }
+      });
+    }
+
+    this.setState({ outlineColor: color });
   };
 }
 

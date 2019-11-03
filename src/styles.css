@@ -14,7 +14,7 @@
   top: 0;
   left: 0;
   height: calc(100% - 40px);
-  z-index: 2;
+  z-index: 1;
   padding-top: 40px;
 }
 
@@ -64,9 +64,8 @@
   background: #f0f0f0;
   top: 0;
   left: 0;
-  padding-left: 40px;
-  width: calc(100% - 40px);
-  z-index: 1;
+  width: 100%;
+  z-index: 2;
 }
 
 .rdc-paper-drawing-item-close {
@@ -90,4 +89,52 @@
 .rdc-paper-drawing-item-brush .rdc-paper-drawing-item-close {
   top: -32px;
   right: 0;
+}
+
+/** Tooloption styles **/
+.rdc-tooloptions-wrapper {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  position: relative;
+}
+
+.rdc-tooloptions-color-picker-wrapper {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  display: inline-block;
+}
+
+.rdc-tooloptions-color-picker-picker {
+  position: absolute;
+  top:32px;
+  left:32px;
+  box-shadow: 1px 1px 2px #f0f0f0;
+  z-index: 3002;
+}
+
+.rdc-tooloptions-color-picker-fill,
+.rdc-tooloptions-color-picker-outline {
+  width: 40px;
+  height: 20px;
+  position: absolute;
+  top:0;
+  left:0;
+  cursor: pointer;
+}
+
+.rdc-tooloptions-color-picker-outline {
+  top:unset;
+  bottom:0;
+}
+
+.rdc-tooloptions-color-picker-ok-button {
+  height: 24px;
+  background: #404040;
+  width: 217px;
+  color: #f0f0f0;
+  text-align: center;
+  padding: 4px;
+  cursor: pointer;
 }

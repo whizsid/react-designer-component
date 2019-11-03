@@ -1,6 +1,7 @@
 import * as React from "react";
 import { DeepPartial } from "ts-essentials";
 import { string } from "prop-types";
+import { RGBColor } from "react-color";
 
 export interface ISize {
   width: number;
@@ -145,8 +146,17 @@ export interface IToolBoxButtonClasses {
   tooltip: string;
 }
 
+export interface IToolOptionsColorPickerClasses {
+  wrapper: string;
+  picker: string;
+  fill: string;
+  outline: string;
+  okButton: string;
+}
+
 export interface IToolOptionClasses {
   wrapper: string;
+  colorPicker: IToolOptionsColorPickerClasses;
 }
 
 export interface IToolBoxClasses {
@@ -236,11 +246,20 @@ export interface IToolBoxButtonProps {
   onClick?: (e: React.MouseEvent) => void;
 }
 
-export interface IToolBoxSwitchProps {
-  icon: JSX.Element;
-  tooltip: string;
-  active: boolean;
-  onToggle: (status: boolean) => void;
+export interface IToolOptionsProps {
+  classes: IToolOptionClasses;
+  onChangeFillColor?: (color: string) => void;
+  onChangeOutlineColor?: (color: string) => void;
+  fillColor?: string;
+  outlineColor?: string;
+}
+
+export interface IToolOptionsColorPickerProps {
+  classes: IToolOptionsColorPickerClasses;
+  onChangeFillColor?: (color: string) => void;
+  onChangeOutlineColor?: (color: string) => void;
+  fillColor?: string;
+  outlineColor?: string;
 }
 
 export interface IPaperProps {

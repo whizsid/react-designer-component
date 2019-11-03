@@ -19,7 +19,14 @@ const styleClasses: IStyleClasses = {
       wrapper: "rdc-paper"
     },
     toolOptions: {
-      wrapper: "rdc-tooloptions"
+      colorPicker:{
+        fill: "rdc-tooloptions-color-picker-fill",
+        okButton: "rdc-tooloptions-color-picker-ok-button",
+        outline: "rdc-tooloptions-color-picker-outline",
+        picker: "rdc-tooloptions-color-picker-picker",
+        wrapper: "rdc-tooloptions-color-picker"
+      },
+      wrapper: "rdc-tooloptions",
     },
     toolbox: {
       button: {
