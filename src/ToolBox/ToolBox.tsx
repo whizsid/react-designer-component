@@ -77,6 +77,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
         />
         <input
           onChange={this.handleChangeImage}
+          style={{display:"none"}}
           type="file"
           ref={this.setImageInputRef}
         />

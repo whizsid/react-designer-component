@@ -1,3 +1,93 @@
-.rdc-paper-drawing-area {
-    background: #f0f0f0;
+.rdc-wrapper {
+  background: #404040;
+  position: relative;
+  padding-top: 80px;
+  padding-bottom: 40px;
+  padding-left: 40px;
+}
+
+/** Toolbox styles **/
+.rdc-toolbox {
+  background: #f0f0f0;
+  width: 40px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: calc(100% - 40px);
+  z-index: 2;
+  padding-top: 40px;
+}
+
+.rdc-toolbox-button-default {
+  position: relative;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.rdc-toolbox-button-active {
+  background: #d0d0d0;
+}
+
+.rdc-toolbox-button-tooltip {
+  position: absolute;
+  background: #e0e0e0;
+  display: none;
+  top: 50%;
+  left: 110%;
+  transform: translate(0, -50%);
+  white-space: nowrap;
+  padding: 4px;
+  border-radius: 4px;
+  color: #404040;
+  background: #f0f0f0;
+  z-index: 2;
+  box-shadow: 1px 1px 2px #404040;
+}
+
+.rdc-toolbox-button-default:hover .rdc-toolbox-button-tooltip {
+  display: block;
+}
+
+/** Paper styles **/
+.rdc-paper {
+  margin: auto;
+}
+
+.rdc-paper-drawing {
+  background: #f0f0f0;
+  display: block;
+}
+
+.rdc-tooloptions {
+  position: absolute;
+  height: 40px;
+  background: #f0f0f0;
+  top: 0;
+  left: 0;
+  padding-left: 40px;
+  width: calc(100% - 40px);
+  z-index: 1;
+}
+
+.rdc-paper-drawing-item-close {
+  background: #e32524;
+  border-radius: 100%;
+  display: block;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  cursor: pointer;
+}
+
+.rdc-paper-drawing-item-close:hover {
+  box-shadow: 1px 2px 2px #404040;
+}
+
+.rdc-paper-drawing-item-line .rdc-paper-drawing-item-close,
+.rdc-paper-drawing-item-text .rdc-paper-drawing-item-close,
+.rdc-paper-drawing-item-brush .rdc-paper-drawing-item-close {
+  top: -32px;
+  right: 0;
 }

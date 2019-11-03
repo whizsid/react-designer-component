@@ -1,17 +1,20 @@
+import classnames from "classnames";
 import * as React from "react";
 import { BrushItem, IDesignerItemComponent } from "../types";
+import CloseButton from "./CloseButton";
 
 class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
   public render() {
     const {
-      // selected,
-      // onRemove,
+      selected,
+      onRemove,
       onSelect,
-      // classes,
+      classes,
       outlineColor,
       outlineWeight,
       positions,
-      position
+      position,
+      naturalPosition
     } = this.props;
 
     const maxLeft = positions.reduce((prvPos, curPos) =>
@@ -21,8 +24,15 @@ class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
       prvPos.top < curPos.top ? curPos : prvPos
     );
 
-    const width = Math.abs(position.left - maxLeft.left);
-    const height = Math.abs(position.top - maxTop.top);
+    const minLeft = positions.reduce((prvPos, curPos) =>
+      prvPos.left > curPos.left ? curPos : prvPos
+    );
+    const minTop = positions.reduce((prvPos, curPos) =>
+      prvPos.top > curPos.top ? curPos : prvPos
+    );
+
+    const width = Math.abs(minLeft.left - maxLeft.left);
+    const height = Math.abs(minTop.top - maxTop.top);
 
     return (
       <div
@@ -34,7 +44,13 @@ class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
           top: position.top,
           width
         }}
+        className={classnames(classes.wrapper, classes.brush)}
       >
+        <CloseButton
+          show={selected}
+          onClick={onRemove}
+          className={classes.closeButton}
+        />
         <div
           style={{
             height,
@@ -49,9 +65,9 @@ class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
                 background: outlineColor,
                 display: "block",
                 height: outlineWeight,
-                left: pos.left - position.left,
+                left: pos.left - naturalPosition.left,
                 position: "absolute",
-                top: pos.top - position.top,
+                top: pos.top - naturalPosition.top,
                 width: outlineWeight
               }}
             />

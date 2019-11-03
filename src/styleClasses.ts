@@ -3,14 +3,20 @@ import { IStyleClasses } from "./types";
 const styleClasses: IStyleClasses = {
   designer: {
     paper: {
-        drawingArea:{
-          item:{
-            closeButton:"rdc-paper-drawing-item-close"  ,
-            wrapper: "rdc-paper-drawing-item"
-          },
-          wrapper:"rdc-paper-drawing",
+      drawingArea: {
+        item: {
+          brush: "rdc-paper-drawing-item-brush",
+          circle: "rdc-paper-drawing-item-circle",
+          closeButton: "rdc-paper-drawing-item-close",
+          image: "rdc-paper-drawing-item-image",
+          line: "rdc-paper-drawing-item-line",
+          rectangle: "rdc-paper-drawing-item-rectangle",
+          text: "rdc-paper-drawing-item-text",
+          wrapper: "rdc-paper-drawing-item"
         },
-        wrapper: "rdc-paper",
+        wrapper: "rdc-paper-drawing"
+      },
+      wrapper: "rdc-paper"
     },
     toolOptions: {
       wrapper: "rdc-tooloptions"
@@ -20,16 +26,8 @@ const styleClasses: IStyleClasses = {
         icon: "rdc-toolbox-button-icon",
         tooltip: "rdc-toolbox-button-tooltip",
         wrapper: {
-          active:"rdc-toolbox-button-active",
+          active: "rdc-toolbox-button-active",
           default: "rdc-toolbox-button-default"
-        }
-      },
-      switch: {
-        icon: "rdc-toolbox-switch-icon",
-        tooltip: "rdc-toolbox-switch-tooltip",
-        wrapper: {
-          active: "rdc-toolbox-switch-active",
-          default: "rdc-toolbox-switch-default"
         }
       },
       wrapper: "rdc-toolbox"
@@ -37,6 +35,5 @@ const styleClasses: IStyleClasses = {
     wrapper: "rdc-wrapper"
   }
 };
-
 
 export default styleClasses;

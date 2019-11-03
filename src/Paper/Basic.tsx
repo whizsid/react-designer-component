@@ -1,5 +1,7 @@
+import classnames from "classnames";
 import * as React from "react";
 import { IDesignerItemComponent, ResizableItem } from "../types";
+import CloseButton from "./CloseButton";
 
 // Basic item component
 class Basic extends React.Component<
@@ -16,29 +18,32 @@ class Basic extends React.Component<
       classes,
       styles,
       outlineColor,
-      outlineWeight
+      outlineWeight,
+      type
     } = this.props;
 
     return (
       <div
         onClick={onSelect}
-        className={classes.wrapper}
+        className={classnames(classes.wrapper, classes[type])}
         style={{
           backgroundPosition: "center",
           backgroundSize: "100% 100%",
           border: "solid " + outlineWeight + "px " + outlineColor,
           height: size.height,
           left: position.left,
-          position:"absolute",
+          position: "absolute",
           top: position.top,
           transform: "rotate(" + rotate + "deg)",
           width: size.width,
           ...styles
         }}
       >
-        {selected ? (
-          <p className={classes.closeButton} onClick={onRemove} >X</p>
-        ) : null}
+        <CloseButton
+          onClick={onRemove}
+          className={classes.closeButton}
+          show={selected}
+        />
       </div>
     );
   }

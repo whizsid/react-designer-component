@@ -61,9 +61,10 @@ export type TextItem = IHasRotate &
 export type LineItem = IHasRotate &
   IItem &
   IHasOutline &
-  IHasRotate &
-  IResizable & {
+  IHasRotate & {
+    naturalWidth: number;
     type: "line";
+    width: number;
   };
 
 export type CircleItem = IHasRotate &
@@ -102,6 +103,7 @@ export type BrushItem = IHasOutline &
   IHasRotate & {
     type: "brush";
     positions: IPosition[];
+    naturalPosition: IPosition;
   };
 
 export type DesignerItem =
@@ -112,7 +114,7 @@ export type DesignerItem =
   | ImageItem
   | BrushItem;
 
-export type ResizableItem = CircleItem | RectangleItem | ImageItem | LineItem;
+export type ResizableItem = CircleItem | RectangleItem | ImageItem;
 
 export type RotatableItem =
   | TextItem
@@ -143,15 +145,6 @@ export interface IToolBoxButtonClasses {
   tooltip: string;
 }
 
-export interface IToolBoxSwitchClasses {
-  wrapper: {
-    active: string;
-    default: string;
-  };
-  icon: string;
-  tooltip: string;
-}
-
 export interface IToolOptionClasses {
   wrapper: string;
 }
@@ -159,7 +152,6 @@ export interface IToolOptionClasses {
 export interface IToolBoxClasses {
   wrapper: string;
   button: IToolBoxButtonClasses;
-  switch: IToolBoxSwitchClasses;
 }
 
 export interface IPaperClasses {
@@ -175,6 +167,12 @@ export interface IPaperDrawingAreaClasses {
 export interface IPaperItemClasses {
   wrapper: string;
   closeButton: string;
+  line: string;
+  text: string;
+  rectangle: string;
+  circle: string;
+  brush: string;
+  image: string;
 }
 
 export interface IDesignerClasses {
@@ -209,11 +207,11 @@ export interface IDesignerProps {
   };
   // Styling classes
   classes?: DeepPartial<IStyleClasses>;
+  className?: string;
   // Calling when changing items
   onChangeItems: (items: { [x: string]: DesignerItem }) => void;
 
   paperSize?: ISize;
-  itemInitSize?: ISize;
 
   drawingArea?: IPosition[];
 }
@@ -239,7 +237,6 @@ export interface IToolBoxButtonProps {
 }
 
 export interface IToolBoxSwitchProps {
-  classes: IToolBoxSwitchClasses;
   icon: JSX.Element;
   tooltip: string;
   active: boolean;
@@ -248,8 +245,8 @@ export interface IToolBoxSwitchProps {
 
 export interface IPaperProps {
   classes: IPaperClasses;
-  height: number | string;
-  width: number | string;
+  height: number;
+  width: number;
   items: { [x: string]: DesignerItem };
   selectedItem?: DesignerItem;
   area: IPosition[];

@@ -86,7 +86,7 @@ class Paper extends React.Component<IPaperProps, IState> {
     return (
       <div
         className={classes.wrapper}
-        style={{ height, width, position: "relative" }}
+        style={{ height,width, position: "relative" }}
       >
         {typeof selectedItem !== "undefined" ? (
           <Moveable
@@ -137,8 +137,9 @@ class Paper extends React.Component<IPaperProps, IState> {
     return (e: React.MouseEvent<HTMLElement>) => {
       const { onSelectItem } = this.props;
 
-      const target = e.currentTarget as HTMLElement;
-      if (target.tagName !== "P" && onSelectItem) {
+      const target = e.target as HTMLElement;
+      
+      if (target.tagName === "DIV" && onSelectItem) {
         onSelectItem(item);
         this.setState({ target });
       }
@@ -181,13 +182,22 @@ class Paper extends React.Component<IPaperProps, IState> {
         top -= e.delta[1];
       }
 
-      const modedItem = {
-        ...items[selectedItem.itemId],
-        position: { left, top },
-        size: { height: e.height, width: e.width }
-      };
+      if(selectedItem.type!=="line" && typeof selectedItem.itemId !== "undefined"){
+        const modedItem = {
+          ...items[selectedItem.itemId],
+          position: { left, top },
+          size: { height: e.height, width: e.width }
+        };
+        onChangeItem(modedItem);
+      } else  if(selectedItem.type==="line" && typeof selectedItem.itemId !== "undefined") {
+        const modedItem = {
+          ...items[selectedItem.itemId],
+          position: { left, top },
+          width:e.width,
+        };
+        onChangeItem(modedItem);
+      }
 
-      onChangeItem(modedItem);
     }
   };
 

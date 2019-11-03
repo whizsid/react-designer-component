@@ -1,3 +1,4 @@
+import classnames from "classnames";
 import { merge } from "lodash";
 import * as React from "react";
 import { DeepPartial } from "ts-essentials";
@@ -29,13 +30,9 @@ interface IDesignerState {
 
 class Designer extends React.Component<IDesignerProps, IDesignerState> {
   public static defaultProps: DeepPartial<IDesignerProps> = {
-    itemInitSize: {
-      height: 100,
-      width: 100
-    },
     paperSize: {
-      height: 600,
-      width: 300
+      height: 300,
+      width: 600
     }
   };
 
@@ -98,10 +95,10 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       selectedItem
     } = this.state;
 
-    const { paperSize } = this.props;
+    const { paperSize, className } = this.props;
 
     return (
-      <div className={classes.designer.wrapper}>
+      <div style={{width: paperSize!.width+100}} className={classnames(classes.designer.wrapper, className)}>
         <ToolBox
           classes={classes.designer.toolbox}
           onAddImage={this.handleAddImage}
@@ -112,7 +109,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           onAddBrush={this.handleAddBrush}
           mode={mode}
         />
-        <div className={classes.designer.toolOptions.wrapper}>Toolbar</div>
+        <div className={classes.designer.toolOptions.wrapper}>ToolOptions</div>
         <Paper
           classes={classes.designer.paper}
           height={paperSize!.height}
@@ -274,8 +271,16 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
         break;
       case "line":
         this.addItem({
-          ...basicItemDetails,
-          type: "line"
+          ables: {
+            ...ables
+          },
+          naturalWidth: 4,
+          outlineColor: color,
+          outlineWeight: 1,
+          position,
+          rotate: 0,
+          type: "line",
+          width: 4
         });
         break;
       case "text":
@@ -309,6 +314,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
             resize: false,
             rotate: true
           },
+          naturalPosition: position,
           outlineColor: color,
           outlineWeight: 1,
           position,
@@ -333,15 +339,18 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           updatingItem.type === "circle") &&
         typeof updatingItem.itemId === "number"
       ) {
+        const adjSize = {
+          height: position.top - updatingItem.position.top,
+          width: position.left - updatingItem.position.left
+        };
+
         this.setState({
           items: {
             ...items,
             [updatingItem.itemId]: {
               ...updatingItem,
-              size: {
-                height: position.top - updatingItem.position.top,
-                width: position.left - updatingItem.position.left
-              }
+              naturalSize: adjSize,
+              size: adjSize
             }
           }
         });
@@ -349,24 +358,24 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
         updatingItem.type === "line" &&
         typeof updatingItem.itemId === "number"
       ) {
+        const adjWidth = Math.sqrt(
+          Math.pow(updatingItem.position.left - position.left, 2) +
+            Math.pow(updatingItem.position.top - position.top, 2)
+        );
+
         this.setState({
           items: {
             ...items,
             [updatingItem.itemId]: {
               ...updatingItem,
+              naturalWidth: adjWidth,
               rotate:
                 Math.atan2(
                   position.top - updatingItem.position.top,
                   position.left - updatingItem.position.left
                 ) *
                 (180 / Math.PI),
-              size: {
-                ...updatingItem,
-                width: Math.sqrt(
-                  Math.pow(updatingItem.position.left - position.left, 2) +
-                    Math.pow(updatingItem.position.top - position.top, 2)
-                )
-              }
+              width: adjWidth
             }
           }
         });
@@ -408,21 +417,22 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           }
         }
 
+        const orgPosition = {
+          left:
+            item.position.left > position.left
+              ? position.left
+              : item.position.left,
+          top:
+            item.position.top > position.top ? position.top : item.position.top
+        };
+
         this.setState({
           items: {
             ...items,
             [updatingItem.itemId]: {
               ...updatingItem,
-              position: {
-                left:
-                  item.position.left > position.left
-                    ? position.left
-                    : item.position.left,
-                top:
-                  item.position.top > position.top
-                    ? position.top
-                    : item.position.top
-              },
+              naturalPosition: orgPosition,
+              position: orgPosition,
               positions: [...item.positions, ...positions]
             }
           }

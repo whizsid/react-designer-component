@@ -1,5 +1,7 @@
+import classnames from "classnames";
 import * as React from "react";
 import { IDesignerItemComponent, TextItem } from "../types";
+import CloseButton from "./CloseButton";
 
 class Text extends React.Component<
   TextItem & IDesignerItemComponent & { onChangeText: (value?: string) => void }
@@ -12,13 +14,14 @@ class Text extends React.Component<
       color,
       rotate,
       position,
+      selected,
       text,
       onRemove
     } = this.props;
 
     return (
       <div
-        className={classes.wrapper}
+        className={classnames(classes.wrapper, classes.text)}
         style={{
           color,
           fontFamily: fontName,
@@ -31,6 +34,11 @@ class Text extends React.Component<
         }}
         onClick={this.handleClickWrapper}
       >
+        <CloseButton
+          className={classes.closeButton}
+          show={selected}
+          onClick={onRemove}
+        />
         <span
           style={{ pointerEvents: "inherit" }}
           onChange={this.handleChangeText}
@@ -40,9 +48,6 @@ class Text extends React.Component<
         >
           {text}
         </span>
-        <p onClick={onRemove} className={classes.closeButton}>
-          X
-        </p>
       </div>
     );
   }

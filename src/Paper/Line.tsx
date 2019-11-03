@@ -1,5 +1,7 @@
+import classnames from "classnames";
 import * as React from "react";
 import { IDesignerItemComponent, LineItem } from "../types";
+import CloseButton from "./CloseButton";
 
 class Line extends React.Component<LineItem & IDesignerItemComponent> {
   public render() {
@@ -7,16 +9,17 @@ class Line extends React.Component<LineItem & IDesignerItemComponent> {
       classes,
       outlineWeight,
       position,
+      selected,
       rotate,
       onSelect,
-      size,
       onRemove,
-      outlineColor
+      outlineColor,
+      width
     } = this.props;
     return (
       <div
         onClick={onSelect}
-        className={classes.wrapper}
+        className={ classnames( classes.wrapper,classes.line)}
         style={{
           height: outlineWeight + 8,
           left: position.left,
@@ -25,20 +28,22 @@ class Line extends React.Component<LineItem & IDesignerItemComponent> {
           position: "absolute",
           top: position.top,
           transform: "rotate(" + rotate + "deg)",
-          transformOrigin:"left top",
-          width: size.width
+          transformOrigin: "left top",
+          width
         }}
       >
+        <CloseButton
+          className={classes.closeButton}
+          show={selected}
+          onClick={onRemove}
+        />
         <div
           style={{
             background: outlineColor,
             height: outlineWeight,
-            width: size.width,
+            width
           }}
         />
-        <p onClick={onRemove} className={classes.closeButton}>
-          X
-        </p>
       </div>
     );
   }
