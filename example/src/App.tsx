@@ -26,6 +26,7 @@ class App extends React.Component <{},IState> {
         <Designer
           items={items}
           onChangeItems={this.handleChangeItems}
+          fontApiKey="YOUR_API_KEY"
         />
       </div>
     );

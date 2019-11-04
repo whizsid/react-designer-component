@@ -23,6 +23,7 @@ interface IDesignerState {
   useInternalItems: boolean;
   color: string;
   outlineColor: string;
+  font: string;
   area: IPosition[];
   mode?: DesignerItem["type"];
   lastImageInfo?: IImageInfo;
@@ -35,7 +36,8 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     paperSize: {
       height: 300,
       width: 600
-    }
+    },
+    fontApiKey: "YOUR_API_KEY"
   };
 
   constructor(props: IDesignerProps) {
@@ -72,6 +74,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       area,
       classes: merge(classes, styleClasses),
       color: "#ffffff",
+      font: "Sans Serif",
       items: {},
       lastItemId: -1,
       outlineColor: "#ff0000",
@@ -97,10 +100,11 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       updatingItem,
       selectedItem,
       color,
-      outlineColor
+      outlineColor,
+      font
     } = this.state;
 
-    const { paperSize, className } = this.props;
+    const { paperSize, className, fontApiKey } = this.props;
 
     return (
       <div
@@ -123,6 +127,9 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           outlineColor={outlineColor}
           onChangeFillColor={this.handleChangeFillColor}
           onChangeOutlineColor={this.handleChangeOutlineColor}
+          onChangeFont={this.handleChangeFont}
+          fontApiKey={fontApiKey!}
+          font={font}
         />
         <Paper
           classes={classes.designer.paper}
@@ -233,7 +240,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   };
 
   private handleMouseDown = (position: IPosition) => {
-    const { mode, color, lastImageInfo, outlineColor } = this.state;
+    const { mode, color, lastImageInfo, outlineColor,font } = this.state;
 
     if (!mode) {
       return;
@@ -307,7 +314,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           bold: false,
           color,
           fontId: 1,
-          fontName: "Sans Serif",
+          fontName: font,
           fontSize: 16,
           italic: false,
           position,
@@ -495,13 +502,35 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           ...items,
           [selectedItem.itemId]: {
             ...items[selectedItem.itemId],
-            outlineColor:color
+            outlineColor: color
           }
         }
       });
     }
 
     this.setState({ outlineColor: color });
+  };
+
+  private handleChangeFont = (font: string) => {
+    const { selectedItem, items } = this.state;
+
+    if (
+      selectedItem &&
+      selectedItem.type === "text" &&
+      typeof selectedItem.itemId === "number"
+    ) {
+      this.setState({
+        items: {
+          ...items,
+          [selectedItem.itemId]: {
+            ...items[selectedItem.itemId],
+            fontName:font
+          }
+        }
+      });
+    }
+
+    this.setState({ font });
   };
 }
 

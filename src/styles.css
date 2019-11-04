@@ -99,7 +99,7 @@
   position: relative;
 }
 
-.rdc-tooloptions-color-picker-wrapper {
+.rdc-tooloptions-color-picker {
   width: 40px;
   height: 40px;
   position: relative;
@@ -137,4 +137,14 @@
   text-align: center;
   padding: 4px;
   cursor: pointer;
+}
+
+.rdc-tooloptions-font-picker {
+  display: inline-block;
+  margin-left: 8px;
+}
+
+#font-picker {
+  position: absolute;
+  top: 2px;
 }

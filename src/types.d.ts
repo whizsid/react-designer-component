@@ -157,6 +157,7 @@ export interface IToolOptionsColorPickerClasses {
 export interface IToolOptionClasses {
   wrapper: string;
   colorPicker: IToolOptionsColorPickerClasses;
+  fontPicker: string;
 }
 
 export interface IToolBoxClasses {
@@ -224,6 +225,8 @@ export interface IDesignerProps {
   paperSize?: ISize;
 
   drawingArea?: IPosition[];
+  // Provide your Google Font API key if you using the text feature
+  fontApiKey?:string;
 }
 
 // Sub component props
@@ -250,8 +253,11 @@ export interface IToolOptionsProps {
   classes: IToolOptionClasses;
   onChangeFillColor?: (color: string) => void;
   onChangeOutlineColor?: (color: string) => void;
+  onChangeFont?: (font:string)=>void;
   fillColor?: string;
   outlineColor?: string;
+  font: string;
+  fontApiKey: string;
 }
 
 export interface IToolOptionsColorPickerProps {

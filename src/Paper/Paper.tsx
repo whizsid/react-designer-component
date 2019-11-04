@@ -11,6 +11,13 @@ interface IState {
   mouseDown: boolean;
 }
 
+interface IMouseTouchEvent {
+  target:HTMLElement;
+  currentTarget:HTMLElement;
+  x:number;
+  y:number;
+}
+
 class Paper extends React.Component<IPaperProps, IState> {
   private canvasRef = React.createRef<HTMLDivElement>();
 
@@ -128,6 +135,9 @@ class Paper extends React.Component<IPaperProps, IState> {
           onMouseMove={this.handleMouseMove}
           onMouseUp={this.handleMouseUp}
           onMouseLeave={this.handleMouseLeave}
+          onTouchStart={this.handleTouchStart}
+          onTouchMove={this.handleTouchMove}
+          onTouchEnd={this.handleTouchEnd}
         >
           {Object.values(items).map(this.renderItem)}
         </span>
@@ -233,7 +243,7 @@ class Paper extends React.Component<IPaperProps, IState> {
     };
   };
 
-  protected handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+  protected handleStartDraw = (e:IMouseTouchEvent) => {
     const { onMouseDown, selectedItem, onSelectItem } = this.props;
     this.setState({ mouseDown: true });
 
@@ -248,13 +258,13 @@ class Paper extends React.Component<IPaperProps, IState> {
 
     if (onMouseDown) {
       onMouseDown({
-        left: e.clientX - boundingBox.left,
-        top: e.clientY - boundingBox.top
+        left: e.x - boundingBox.left,
+        top: e.x - boundingBox.top
       });
     }
   };
 
-  protected handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  protected handleDraw= (e: IMouseTouchEvent) => {
     const { mouseDown } = this.state;
     const { onMouseMove } = this.props;
 
@@ -262,13 +272,13 @@ class Paper extends React.Component<IPaperProps, IState> {
 
     if (mouseDown && onMouseMove) {
       onMouseMove({
-        left: e.clientX - boundingBox.left,
-        top: e.clientY - boundingBox.top
+        left: e.x - boundingBox.left,
+        top: e.y - boundingBox.top
       });
     }
   };
 
-  protected handleMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+  protected handleEndDraw = (e:IMouseTouchEvent) => {
     const { onMouseUp } = this.props;
 
     const boundingBox = e.currentTarget.getBoundingClientRect();
@@ -276,29 +286,105 @@ class Paper extends React.Component<IPaperProps, IState> {
     this.setState({ mouseDown: false });
     if (onMouseUp) {
       onMouseUp({
-        left: e.clientX - boundingBox.left,
-        top: e.clientY - boundingBox.top
+        left: e.x - boundingBox.left,
+        top: e.y - boundingBox.top
       });
     }
   };
 
-  protected handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { mouseDown } = this.state;
-    const { onMouseUp } = this.props;
+  protected handleMouseDown = (e:React.MouseEvent<HTMLElement>)=>{
+    const target = e.target as HTMLElement;
 
-    const boundingBox = e.currentTarget.getBoundingClientRect();
+    this.handleStartDraw({
+      currentTarget:e.currentTarget,
+      target,
+      x:e.clientX,
+      y: e.clientY
+    });
+  };
+
+  protected handleMouseMove = (e:React.MouseEvent<HTMLElement>)=>{
+    const target = e.target as HTMLElement;
+
+    this.handleDraw({
+      currentTarget:e.currentTarget,
+      target,
+      x:e.clientX,
+      y: e.clientY
+    });
+  };
+
+  protected handleMouseUp = (e:React.MouseEvent<HTMLElement>)=>{
+    const target = e.target as HTMLElement;
+
+    this.handleEndDraw({
+      currentTarget:e.currentTarget,
+      target,
+      x:e.clientX,
+      y: e.clientY
+    });
+  };
+
+  protected handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
+    const { mouseDown } = this.state;
+
+    const target = e.target as HTMLElement;
 
     if (mouseDown) {
-      this.setState({ mouseDown: false });
-
-      if (onMouseUp) {
-        onMouseUp({
-          left: e.clientX - boundingBox.left,
-          top: e.clientY - boundingBox.top
-        });
-      }
+      this.handleEndDraw({
+        currentTarget: e.currentTarget,
+        target,
+        x:e.clientX,
+        y:e.clientY,
+      });
     }
   };
+
+  protected handleTouchStart = (e:React.TouchEvent<HTMLElement>)=>{
+    const target = e.target as HTMLElement;
+    const touch = e.touches[0];
+
+    if(touch){
+      this.handleStartDraw({
+        currentTarget:e.currentTarget,
+        target,
+        x:touch.clientX,
+        y:touch.clientY
+      });
+    }
+
+  };
+
+  protected handleTouchMove = (e:React.TouchEvent<HTMLElement>)=>{
+    const target = e.target as HTMLElement;
+    const touch = e.touches[0];
+
+    if(touch){
+      this.handleDraw({
+        currentTarget:e.currentTarget,
+        target,
+        x:touch.clientX,
+        y:touch.clientY
+      });
+    }
+
+  };
+
+  protected handleTouchEnd = (e:React.TouchEvent<HTMLElement>)=>{
+    const target = e.target as HTMLElement;
+    const touch = e.touches[0];
+
+    if(touch){
+      this.handleEndDraw({
+        currentTarget:e.currentTarget,
+        target,
+        x:touch.clientX,
+        y:touch.clientY
+      });
+    }
+
+  };
+
 
   protected handleChangeText = (item: TextItem) => {
     return (value?: string) => {

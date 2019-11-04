@@ -1,3 +1,5 @@
+import { Font } from "@samuelmeuli/font-manager";
+import FontPicker from "font-picker-react";
 import * as React from "react";
 import { IToolOptionsProps } from "../types";
 import ColorPicker from "./ColorPicker";
@@ -18,7 +20,9 @@ class ToolOptions extends React.Component<IToolOptionsProps> {
       fillColor,
       outlineColor,
       onChangeFillColor,
-      onChangeOutlineColor
+      onChangeOutlineColor,
+      font,
+      fontApiKey      
     } = this.props;
 
     return (
@@ -30,9 +34,24 @@ class ToolOptions extends React.Component<IToolOptionsProps> {
           onChangeFillColor={onChangeFillColor}
           onChangeOutlineColor={onChangeOutlineColor}
         />
+        <div className={classes.fontPicker}>
+          <FontPicker
+            apiKey={fontApiKey}
+            activeFontFamily={font}
+            onChange={this.handleChangeFont}
+          />
+        </div>
       </div>
     );
   }
+
+  protected handleChangeFont = (font: Font) => {
+    const { onChangeFont } = this.props;
+
+    if (onChangeFont) {
+      onChangeFont(font.family);
+    }
+  };
 }
 
 export default ToolOptions;

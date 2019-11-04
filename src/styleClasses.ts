@@ -26,6 +26,7 @@ const styleClasses: IStyleClasses = {
         picker: "rdc-tooloptions-color-picker-picker",
         wrapper: "rdc-tooloptions-color-picker"
       },
+      fontPicker: "rdc-tooloptions-font-picker",
       wrapper: "rdc-tooloptions",
     },
     toolbox: {
