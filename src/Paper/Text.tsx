@@ -16,7 +16,10 @@ class Text extends React.Component<
       position,
       selected,
       text,
-      onRemove
+      onRemove,
+      bold,
+      italic,
+      underline
     } = this.props;
 
     return (
@@ -26,9 +29,12 @@ class Text extends React.Component<
           color,
           fontFamily: fontName,
           fontSize,
+          fontStyle: italic ? "italic" : "unset",
+          fontWeight: bold ? 750 : 500,
           left: position.left - 8,
           padding: 8,
           position: "absolute",
+          textDecoration: underline ? "underline" : "unset",
           top: position.top - 8,
           transform: "rotate( " + rotate + "deg)"
         }}

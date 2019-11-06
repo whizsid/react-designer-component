@@ -22,7 +22,8 @@
         "no-implicit-dependencies": false,
         "no-console": false,
         "member-access": true,
-        "only-arrow-functions": true
+        "only-arrow-functions": true,
+        "radix":false
     },
     "rulesDirectory": []
 }

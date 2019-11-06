@@ -154,10 +154,26 @@ export interface IToolOptionsColorPickerClasses {
   okButton: string;
 }
 
+export interface IToolOptionsNumberInputClasses {
+  wrapper:string;
+  label:string;
+  input: string;
+}
+
+export interface IToolOptionsIconClasses {
+  active: string;
+  default: string;
+}
+
 export interface IToolOptionClasses {
   wrapper: string;
   colorPicker: IToolOptionsColorPickerClasses;
   fontPicker: string;
+  fontSize: IToolOptionsNumberInputClasses;
+  outlineWeight: IToolOptionsNumberInputClasses;
+  italicIcon: IToolOptionsIconClasses;
+  boldIcon: IToolOptionsIconClasses;
+  underlineIcon: IToolOptionsIconClasses;
 }
 
 export interface IToolBoxClasses {
@@ -254,10 +270,21 @@ export interface IToolOptionsProps {
   onChangeFillColor?: (color: string) => void;
   onChangeOutlineColor?: (color: string) => void;
   onChangeFont?: (font:string)=>void;
+  onChangeFontSize?: (fontSize:number)=>void;
+  onChangeOutlineWeight?: (outline:number)=>void;
+  onToggleItalic?:(italic:boolean)=>void;
+  onToggleBold?:(bold:boolean)=>void;
+  onToggleUnderline?:(bold:boolean)=>void;
   fillColor?: string;
   outlineColor?: string;
   font: string;
   fontApiKey: string;
+  italic:boolean;
+  bold: boolean;
+  underline: boolean;
+  fontSize: number;
+  outlineWeight: number;
+  mode?: DesignerItem["type"]
 }
 
 export interface IToolOptionsColorPickerProps {

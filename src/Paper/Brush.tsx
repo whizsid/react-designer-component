@@ -14,7 +14,8 @@ class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
       outlineWeight,
       positions,
       position,
-      naturalPosition
+      naturalPosition,
+      rotate
     } = this.props;
 
     const maxLeft = positions.reduce((prvPos, curPos) =>
@@ -42,6 +43,7 @@ class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
           left: position.left,
           position: "absolute",
           top: position.top,
+          transform: "rotate(" + rotate + "deg)",
           width
         }}
         className={classnames(classes.wrapper, classes.brush)}

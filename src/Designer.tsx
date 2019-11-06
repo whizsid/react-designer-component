@@ -23,7 +23,12 @@ interface IDesignerState {
   useInternalItems: boolean;
   color: string;
   outlineColor: string;
+  outlineWeight: number;
   font: string;
+  fontSize: number;
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
   area: IPosition[];
   mode?: DesignerItem["type"];
   lastImageInfo?: IImageInfo;
@@ -33,11 +38,11 @@ interface IDesignerState {
 
 class Designer extends React.Component<IDesignerProps, IDesignerState> {
   public static defaultProps: DeepPartial<IDesignerProps> = {
+    fontApiKey: "YOUR_API_KEY",
     paperSize: {
       height: 300,
       width: 600
-    },
-    fontApiKey: "YOUR_API_KEY"
+    }
   };
 
   constructor(props: IDesignerProps) {
@@ -72,12 +77,17 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
 
     this.state = {
       area,
+      bold: false,
       classes: merge(classes, styleClasses),
       color: "#ffffff",
       font: "Sans Serif",
+      fontSize: 12,
+      italic: false,
       items: {},
       lastItemId: -1,
       outlineColor: "#ff0000",
+      outlineWeight: 4,
+      underline: false,
       useInternalItems: !!props.items
     };
   }
@@ -101,7 +111,12 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       selectedItem,
       color,
       outlineColor,
-      font
+      font,
+      fontSize,
+      outlineWeight,
+      bold,
+      italic,
+      underline
     } = this.state;
 
     const { paperSize, className, fontApiKey } = this.props;
@@ -128,8 +143,19 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           onChangeFillColor={this.handleChangeFillColor}
           onChangeOutlineColor={this.handleChangeOutlineColor}
           onChangeFont={this.handleChangeFont}
+          onChangeFontSize={this.handleChangeFontSize}
+          onChangeOutlineWeight={this.handleChangeOutlineWeight}
+          onToggleBold={this.handleChangeFontStyle("bold")}
+          onToggleUnderline={this.handleChangeFontStyle("underline")}
+          onToggleItalic={this.handleChangeFontStyle("italic")}
           fontApiKey={fontApiKey!}
           font={font}
+          fontSize={fontSize}
+          outlineWeight={outlineWeight}
+          bold={bold}
+          italic={italic}
+          underline={underline}
+          mode={mode ? mode : selectedItem ? selectedItem.type : undefined}
         />
         <Paper
           classes={classes.designer.paper}
@@ -240,7 +266,18 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   };
 
   private handleMouseDown = (position: IPosition) => {
-    const { mode, color, lastImageInfo, outlineColor,font } = this.state;
+    const {
+      mode,
+      color,
+      lastImageInfo,
+      outlineColor,
+      font,
+      italic,
+      bold,
+      fontSize,
+      underline,
+      outlineWeight
+    } = this.state;
 
     if (!mode) {
       return;
@@ -261,7 +298,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       },
       naturalSize: { width: 4, height: 4 },
       outlineColor,
-      outlineWeight: 1,
+      outlineWeight,
       position,
       rotate: 0,
       size: { width: 4, height: 4 }
@@ -297,7 +334,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           },
           naturalWidth: 4,
           outlineColor,
-          outlineWeight: 1,
+          outlineWeight,
           position,
           rotate: 0,
           type: "line",
@@ -311,17 +348,17 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
             outline: false,
             resize: false
           },
-          bold: false,
-          color,
+          bold,
+          color: outlineColor,
           fontId: 1,
           fontName: font,
-          fontSize: 16,
-          italic: false,
+          fontSize,
+          italic,
           position,
           rotate: 0,
           text: "Click to add a text",
           type: "text",
-          underline: false
+          underline
         });
         this.setState({ updatingItem: undefined });
         break;
@@ -336,8 +373,8 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
             rotate: true
           },
           naturalPosition: position,
-          outlineColor: color,
-          outlineWeight: 1,
+          outlineColor,
+          outlineWeight,
           position,
           positions: [position],
           rotate: 0,
@@ -524,13 +561,105 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           ...items,
           [selectedItem.itemId]: {
             ...items[selectedItem.itemId],
-            fontName:font
+            fontName: font
           }
         }
       });
     }
 
     this.setState({ font });
+  };
+
+  private handleChangeFontSize = (size: number) => {
+    const { selectedItem, items } = this.state;
+
+    if (
+      selectedItem &&
+      selectedItem.type === "text" &&
+      typeof selectedItem.itemId === "number"
+    ) {
+      this.setState({
+        items: {
+          ...items,
+          [selectedItem.itemId]: {
+            ...items[selectedItem.itemId],
+            fontSize: size
+          }
+        }
+      });
+    }
+    console.log(size);
+    this.setState({
+      fontSize: size
+    });
+  };
+
+  private handleChangeOutlineWeight = (outline: number) => {
+    const { selectedItem, items } = this.state;
+
+    if (
+      selectedItem &&
+      (selectedItem.type === "rectangle" ||
+        selectedItem.type === "line" ||
+        selectedItem.type === "image" ||
+        selectedItem.type === "circle" ||
+        selectedItem.type === "brush") &&
+      typeof selectedItem.itemId === "number"
+    ) {
+      this.setState({
+        items: {
+          ...items,
+          [selectedItem.itemId]: {
+            ...items[selectedItem.itemId],
+            outlineWeight: outline
+          }
+        }
+      });
+    }
+
+    this.setState({
+      outlineWeight: outline
+    });
+  };
+
+  private handleChangeFontStyle = (style: "bold" | "italic" | "underline") => {
+    return (status: boolean) => {
+      const { selectedItem, items } = this.state;
+
+      if (
+        selectedItem &&
+        selectedItem.type === "text" &&
+        typeof selectedItem.itemId === "number"
+      ) {
+        this.setState({
+          items: {
+            ...items,
+            [selectedItem.itemId]: {
+              ...items[selectedItem.itemId],
+              [style]: status
+            }
+          }
+        });
+      }
+
+      switch (style) {
+        case "bold":
+          this.setState({
+            bold: status
+          });
+          break;
+        case "italic":
+          this.setState({
+            italic: status
+          });
+          break;
+        case "underline":
+          this.setState({
+            underline: status
+          });
+          break;
+      }
+    };
   };
 }
 
