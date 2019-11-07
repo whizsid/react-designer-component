@@ -30,7 +30,6 @@ export interface IItem {
 
 export interface IResizable {
   size: ISize;
-  naturalSize: ISize;
 }
 
 export interface IHasRotate {
@@ -97,6 +96,7 @@ export type ImageItem = IHasRotate &
   IResizable & {
     type: "image";
     data: string;
+    naturalSize: ISize;
   };
 
 export type BrushItem = IHasOutline &
@@ -155,8 +155,8 @@ export interface IToolOptionsColorPickerClasses {
 }
 
 export interface IToolOptionsNumberInputClasses {
-  wrapper:string;
-  label:string;
+  wrapper: string;
+  label: string;
   input: string;
 }
 
@@ -209,29 +209,20 @@ export interface IDesignerClasses {
   paper: IPaperClasses;
 }
 
+interface IFeatures {
+  text?: boolean;
+  brush?: boolean;
+  image?: boolean;
+  circle?: boolean;
+  rectangle?: boolean;
+  line?: boolean;
+}
+
 // Props
 export interface IDesignerProps {
   items: { [x: string]: DesignerItem };
-  // Display or hide default toolbar
-  // Make it false and use customButtons prop to bind events to your custom buttons
-  showToolbar?: boolean;
-  customButtons?: {
-    textButton?: HTMLElement;
-    brushButton?: HTMLElement;
-    imageButton?: HTMLElement;
-    circleButton?: HTMLElement;
-    rectangleButton?: HTMLElement;
-    lineButton?: HTMLElement;
-  };
   // Features disable or enable
-  features?: {
-    text?: boolean;
-    brush?: boolean;
-    image?: boolean;
-    circle?: boolean;
-    rectangle?: boolean;
-    line?: boolean;
-  };
+  features?: Partial<IFeatures>;
   // Styling classes
   classes?: DeepPartial<IStyleClasses>;
   className?: string;
@@ -242,12 +233,13 @@ export interface IDesignerProps {
 
   drawingArea?: IPosition[];
   // Provide your Google Font API key if you using the text feature
-  fontApiKey?:string;
+  fontApiKey?: string;
 }
 
 // Sub component props
 export interface IToolBoxProps {
   classes: IToolBoxClasses;
+  features: IFeatures;
   mode?: DesignerItem["type"];
   onAddImage?: (info: IImageInfo) => void;
   onAddCircle?: (e: React.MouseEvent) => void;
@@ -269,22 +261,22 @@ export interface IToolOptionsProps {
   classes: IToolOptionClasses;
   onChangeFillColor?: (color: string) => void;
   onChangeOutlineColor?: (color: string) => void;
-  onChangeFont?: (font:string)=>void;
-  onChangeFontSize?: (fontSize:number)=>void;
-  onChangeOutlineWeight?: (outline:number)=>void;
-  onToggleItalic?:(italic:boolean)=>void;
-  onToggleBold?:(bold:boolean)=>void;
-  onToggleUnderline?:(bold:boolean)=>void;
+  onChangeFont?: (font: string) => void;
+  onChangeFontSize?: (fontSize: number) => void;
+  onChangeOutlineWeight?: (outline: number) => void;
+  onToggleItalic?: (italic: boolean) => void;
+  onToggleBold?: (bold: boolean) => void;
+  onToggleUnderline?: (bold: boolean) => void;
   fillColor?: string;
   outlineColor?: string;
   font: string;
   fontApiKey: string;
-  italic:boolean;
+  italic: boolean;
   bold: boolean;
   underline: boolean;
   fontSize: number;
   outlineWeight: number;
-  mode?: DesignerItem["type"]
+  mode?: DesignerItem["type"];
 }
 
 export interface IToolOptionsColorPickerProps {
@@ -302,6 +294,7 @@ export interface IPaperProps {
   items: { [x: string]: DesignerItem };
   selectedItem?: DesignerItem;
   area: IPosition[];
+  target?: HTMLElement;
   cursor?: React.CSSProperties["cursor"];
   onChangeItem?: (item: DesignerItem) => void;
   onRemoveItem?: (item: DesignerItem) => void;
@@ -309,6 +302,7 @@ export interface IPaperProps {
   onMouseDown?: (position: IPosition) => void;
   onMouseMove?: (position: IPosition) => void;
   onMouseUp?: (position: IPosition) => void;
+  onChangeTarget?: (target?: HTMLElement, func?: () => void) => void;
 }
 
 export interface IIconProps {

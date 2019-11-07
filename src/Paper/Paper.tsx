@@ -7,15 +7,14 @@ import Line from "./Line";
 import Text from "./Text";
 
 interface IState {
-  target?: HTMLElement;
   mouseDown: boolean;
 }
 
 interface IMouseTouchEvent {
-  target:HTMLElement;
-  currentTarget:HTMLElement;
-  x:number;
-  y:number;
+  target: HTMLElement;
+  currentTarget: HTMLElement;
+  x: number;
+  y: number;
 }
 
 class Paper extends React.Component<IPaperProps, IState> {
@@ -82,9 +81,8 @@ class Paper extends React.Component<IPaperProps, IState> {
   };
 
   public render() {
-    const { classes, height, width, area, items, cursor } = this.props;
+    const { classes, height, width, area, items, cursor, target } = this.props;
 
-    const { target } = this.state;
     const { selectedItem } = this.props;
 
     const clipPath =
@@ -147,13 +145,16 @@ class Paper extends React.Component<IPaperProps, IState> {
 
   protected handleSelectItem = (item: DesignerItem) => {
     return (e: React.MouseEvent<HTMLElement>) => {
-      const { onSelectItem } = this.props;
+      const { onSelectItem, onChangeTarget } = this.props;
 
       const target = e.target as HTMLElement;
 
       if (target.tagName === "DIV" && onSelectItem) {
         onSelectItem(item);
-        this.setState({ target: e.currentTarget });
+
+        if (onChangeTarget) {
+          onChangeTarget(e.currentTarget);
+        }
       }
     };
   };
@@ -233,25 +234,34 @@ class Paper extends React.Component<IPaperProps, IState> {
 
   protected handleRemoveItem = (item: DesignerItem) => {
     return () => {
-      const { onRemoveItem } = this.props;
+      const { onRemoveItem, onChangeTarget } = this.props;
 
-      if (onRemoveItem) {
-        this.setState({ target: undefined }, () => {
+      if (onRemoveItem && onChangeTarget) {
+        onChangeTarget(undefined, () => {
           onRemoveItem(item);
         });
       }
     };
   };
 
-  protected handleStartDraw = (e:IMouseTouchEvent) => {
-    const { onMouseDown, selectedItem, onSelectItem } = this.props;
+  protected handleStartDraw = (e: IMouseTouchEvent) => {
+    const {
+      onMouseDown,
+      selectedItem,
+      onSelectItem,
+      onChangeTarget
+    } = this.props;
     this.setState({ mouseDown: true });
-
     const boundingBox = e.currentTarget.getBoundingClientRect();
     const target = e.target as HTMLElement;
 
-    if (target.tagName === "SPAN" && selectedItem && onSelectItem) {
-      this.setState({ target: undefined }, () => {
+    if (
+      target.tagName === "SPAN" &&
+      selectedItem &&
+      onSelectItem &&
+      onChangeTarget
+    ) {
+      onChangeTarget(undefined, () => {
         onSelectItem(undefined);
       });
     }
@@ -259,12 +269,12 @@ class Paper extends React.Component<IPaperProps, IState> {
     if (onMouseDown) {
       onMouseDown({
         left: e.x - boundingBox.left,
-        top: e.x - boundingBox.top
+        top: e.y - boundingBox.top
       });
     }
   };
 
-  protected handleDraw= (e: IMouseTouchEvent) => {
+  protected handleDraw = (e: IMouseTouchEvent) => {
     const { mouseDown } = this.state;
     const { onMouseMove } = this.props;
 
@@ -278,7 +288,7 @@ class Paper extends React.Component<IPaperProps, IState> {
     }
   };
 
-  protected handleEndDraw = (e:IMouseTouchEvent) => {
+  protected handleEndDraw = (e: IMouseTouchEvent) => {
     const { onMouseUp } = this.props;
 
     const boundingBox = e.currentTarget.getBoundingClientRect();
@@ -292,35 +302,34 @@ class Paper extends React.Component<IPaperProps, IState> {
     }
   };
 
-  protected handleMouseDown = (e:React.MouseEvent<HTMLElement>)=>{
+  protected handleMouseDown = (e: React.MouseEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
-
     this.handleStartDraw({
-      currentTarget:e.currentTarget,
+      currentTarget: e.currentTarget,
       target,
-      x:e.clientX,
+      x: e.clientX,
       y: e.clientY
     });
   };
 
-  protected handleMouseMove = (e:React.MouseEvent<HTMLElement>)=>{
+  protected handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
 
     this.handleDraw({
-      currentTarget:e.currentTarget,
+      currentTarget: e.currentTarget,
       target,
-      x:e.clientX,
+      x: e.clientX,
       y: e.clientY
     });
   };
 
-  protected handleMouseUp = (e:React.MouseEvent<HTMLElement>)=>{
+  protected handleMouseUp = (e: React.MouseEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
 
     this.handleEndDraw({
-      currentTarget:e.currentTarget,
+      currentTarget: e.currentTarget,
       target,
-      x:e.clientX,
+      x: e.clientX,
       y: e.clientY
     });
   };
@@ -334,57 +343,53 @@ class Paper extends React.Component<IPaperProps, IState> {
       this.handleEndDraw({
         currentTarget: e.currentTarget,
         target,
-        x:e.clientX,
-        y:e.clientY,
+        x: e.clientX,
+        y: e.clientY
       });
     }
   };
 
-  protected handleTouchStart = (e:React.TouchEvent<HTMLElement>)=>{
+  protected handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
     const touch = e.touches[0];
 
-    if(touch){
+    if (touch) {
       this.handleStartDraw({
-        currentTarget:e.currentTarget,
+        currentTarget: e.currentTarget,
         target,
-        x:touch.clientX,
-        y:touch.clientY
+        x: touch.clientX,
+        y: touch.clientY
       });
     }
-
   };
 
-  protected handleTouchMove = (e:React.TouchEvent<HTMLElement>)=>{
+  protected handleTouchMove = (e: React.TouchEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
     const touch = e.touches[0];
 
-    if(touch){
+    if (touch) {
       this.handleDraw({
-        currentTarget:e.currentTarget,
+        currentTarget: e.currentTarget,
         target,
-        x:touch.clientX,
-        y:touch.clientY
+        x: touch.clientX,
+        y: touch.clientY
       });
     }
-
   };
 
-  protected handleTouchEnd = (e:React.TouchEvent<HTMLElement>)=>{
+  protected handleTouchEnd = (e: React.TouchEvent<HTMLElement>) => {
     const target = e.target as HTMLElement;
     const touch = e.touches[0];
 
-    if(touch){
+    if (touch) {
       this.handleEndDraw({
-        currentTarget:e.currentTarget,
+        currentTarget: e.currentTarget,
         target,
-        x:touch.clientX,
-        y:touch.clientY
+        x: touch.clientX,
+        y: touch.clientY
       });
     }
-
   };
-
 
   protected handleChangeText = (item: TextItem) => {
     return (value?: string) => {

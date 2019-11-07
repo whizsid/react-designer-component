@@ -73,6 +73,7 @@
     "font-picker-react": "^3.4.0",
     "lodash": "^4.17.15",
     "react-color": "^2.17.3",
+    "react-json-view": "^1.19.1",
     "react-moveable": "^0.11.0"
   },
   "peerDependencies": {

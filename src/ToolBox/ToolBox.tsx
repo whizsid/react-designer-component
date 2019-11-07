@@ -29,55 +29,68 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
       onAddLine,
       onAddText,
       onAddBrush,
-      mode
+      mode,
+      features
     } = this.props;
     return (
       <div className={classes.wrapper}>
-        <Button
-          onClick={this.handleClickImageInput}
-          icon={<ImageIcon />}
-          active={mode && mode === "image"}
-          classes={classes.button}
-          tooltip={"Click to add an image"}
-        />
-        <Button
-          onClick={onAddCircle}
-          icon={<CircleIcon />}
-          classes={classes.button}
-          active={mode && mode === "circle"}
-          tooltip={"Click to add a circle"}
-        />
-        <Button
-          onClick={onAddRectangle}
-          icon={<BoxIcon />}
-          classes={classes.button}
-          active={mode && mode === "rectangle"}
-          tooltip={"Click to add a rectangle"}
-        />
-        <Button
-          onClick={onAddLine}
-          icon={<LineIcon />}
-          classes={classes.button}
-          active={mode && mode === "line"}
-          tooltip={"Click to add a straight line"}
-        />
-        <Button
-          onClick={onAddText}
-          icon={<TextIcon />}
-          classes={classes.button}
-          active={mode && mode === "text"}
-          tooltip={"Click to add text"}
-        />
-        <Button
-          onClick={onAddBrush}
-          icon={<BrushIcon />}
-          classes={classes.button}
-          active={mode && mode === "brush"}
-          tooltip={"Click to toggle to brush mode"}
-        />
+        {features.image ? (
+          <Button
+            onClick={this.handleClickImageInput}
+            icon={<ImageIcon />}
+            active={mode && mode === "image"}
+            classes={classes.button}
+            tooltip={"Click to add an image"}
+          />
+        ) : null}
+        {features.circle ? (
+          <Button
+            onClick={onAddCircle}
+            icon={<CircleIcon />}
+            classes={classes.button}
+            active={mode && mode === "circle"}
+            tooltip={"Click to add a circle"}
+          />
+        ) : null}
+        {features.rectangle ? (
+          <Button
+            onClick={onAddRectangle}
+            icon={<BoxIcon />}
+            classes={classes.button}
+            active={mode && mode === "rectangle"}
+            tooltip={"Click to add a rectangle"}
+          />
+        ) : null}
+        {features.line ? (
+          <Button
+            onClick={onAddLine}
+            icon={<LineIcon />}
+            classes={classes.button}
+            active={mode && mode === "line"}
+            tooltip={"Click to add a straight line"}
+          />
+        ) : null}
+        {features.text ? (
+          <Button
+            onClick={onAddText}
+            icon={<TextIcon />}
+            classes={classes.button}
+            active={mode && mode === "text"}
+            tooltip={"Click to add text"}
+          />
+        ) : null}
+        {features.brush ? (
+          <Button
+            onClick={onAddBrush}
+            icon={<BrushIcon />}
+            classes={classes.button}
+            active={mode && mode === "brush"}
+            tooltip={"Click to toggle to brush mode"}
+          />
+        ) : null}
         <input
           onChange={this.handleChangeImage}
-          style={{display:"none"}}
+          style={{ display: "none" }}
           type="file"
           ref={this.setImageInputRef}
         />

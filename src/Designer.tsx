@@ -13,7 +13,8 @@ import {
   IDesignerProps,
   IImageInfo,
   IPosition,
-  IStyleClasses
+  IStyleClasses,
+  IFeatures
 } from "./types";
 
 interface IDesignerState {
@@ -34,7 +35,17 @@ interface IDesignerState {
   lastImageInfo?: IImageInfo;
   updatingItem?: DesignerItem;
   selectedItem?: DesignerItem;
+  target?: HTMLElement;
 }
+
+const defaultFeatures: IFeatures = {
+  brush: true,
+  circle: true,
+  image: true,
+  line: true,
+  rectangle: true,
+  text: true
+};
 
 class Designer extends React.Component<IDesignerProps, IDesignerState> {
   public static defaultProps: DeepPartial<IDesignerProps> = {
@@ -85,10 +96,10 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       italic: false,
       items: {},
       lastItemId: -1,
-      outlineColor: "#ff0000",
+      outlineColor: "#000000",
       outlineWeight: 4,
       underline: false,
-      useInternalItems: !!props.items
+      useInternalItems: !props.items
     };
   }
 
@@ -96,7 +107,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     const { useInternalItems } = this.state;
     const { items } = this.props;
 
-    if (!useInternalItems && !prevProps.items && items) {
+    if (useInternalItems && !prevProps.items && items) {
       this.setState({ useInternalItems: false });
     }
   }
@@ -116,10 +127,11 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       outlineWeight,
       bold,
       italic,
-      underline
+      underline,
+      target
     } = this.state;
 
-    const { paperSize, className, fontApiKey } = this.props;
+    const { paperSize, className, fontApiKey, features } = this.props;
 
     return (
       <div
@@ -135,6 +147,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           onAddText={this.handleAddText}
           onAddBrush={this.handleAddBrush}
           mode={mode}
+          features={{ ...defaultFeatures, ...features }}
         />
         <ToolOptions
           classes={classes.designer.toolOptions}
@@ -170,7 +183,9 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           onMouseMove={this.handleMouseMove}
           onMouseUp={this.handleMouseUp}
           onSelectItem={this.handleSelectItem}
+          onChangeTarget={this.handleChangeTarget}
           cursor={mode || updatingItem ? "move" : undefined}
+          target={target}
         />
       </div>
     );
@@ -201,27 +216,37 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   }
 
   private handleAddImage = (info: IImageInfo) => {
-    this.setState({ lastImageInfo: info, mode: "image" });
+    const { mode } = this.state;
+
+    this.setState({
+      lastImageInfo: info,
+      mode: mode !== "image" ? "image" : undefined
+    });
   };
 
   private handleAddCircle = () => {
-    this.setState({ mode: "circle" });
+    const { mode } = this.state;
+    this.setState({ mode: mode !== "circle" ? "circle" : undefined });
   };
 
   private handleAddRectangle = () => {
-    this.setState({ mode: "rectangle" });
+    const { mode } = this.state;
+    this.setState({ mode: mode !== "rectangle" ? "rectangle" : undefined });
   };
 
   private handleAddLine = () => {
-    this.setState({ mode: "line" });
+    const { mode } = this.state;
+    this.setState({ mode: mode !== "line" ? "line" : undefined });
   };
 
   private handleAddText = () => {
-    this.setState({ mode: "text" });
+    const { mode } = this.state;
+    this.setState({ mode: mode !== "text" ? "text" : undefined });
   };
 
   private handleAddBrush = () => {
-    this.setState({ mode: "brush" });
+    const { mode } = this.state;
+    this.setState({ mode: mode !== "brush" ? "brush" : undefined });
   };
 
   private handleChangeItem = (item: DesignerItem) => {
@@ -296,7 +321,6 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       ables: {
         ...ables
       },
-      naturalSize: { width: 4, height: 4 },
       outlineColor,
       outlineWeight,
       position,
@@ -387,6 +411,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
 
     this.setState({ mode: undefined, lastImageInfo: undefined });
   };
+
   private handleMouseMove = (position: IPosition) => {
     const { updatingItem, items } = this.state;
 
@@ -402,15 +427,9 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           width: position.left - updatingItem.position.left
         };
 
-        this.setState({
-          items: {
-            ...items,
-            [updatingItem.itemId]: {
-              ...updatingItem,
-              naturalSize: adjSize,
-              size: adjSize
-            }
-          }
+        this.handleChangeItem({
+          ...updatingItem,
+          size: adjSize
         });
       } else if (
         updatingItem.type === "line" &&
@@ -421,21 +440,16 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
             Math.pow(updatingItem.position.top - position.top, 2)
         );
 
-        this.setState({
-          items: {
-            ...items,
-            [updatingItem.itemId]: {
-              ...updatingItem,
-              naturalWidth: adjWidth,
-              rotate:
-                Math.atan2(
-                  position.top - updatingItem.position.top,
-                  position.left - updatingItem.position.left
-                ) *
-                (180 / Math.PI),
-              width: adjWidth
-            }
-          }
+        this.handleChangeItem({
+          ...updatingItem,
+          naturalWidth: adjWidth,
+          rotate:
+            Math.atan2(
+              position.top - updatingItem.position.top,
+              position.left - updatingItem.position.left
+            ) *
+            (180 / Math.PI),
+          width: adjWidth
         });
       } else if (
         updatingItem.type === "brush" &&
@@ -484,20 +498,16 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
             item.position.top > position.top ? position.top : item.position.top
         };
 
-        this.setState({
-          items: {
-            ...items,
-            [updatingItem.itemId]: {
-              ...updatingItem,
-              naturalPosition: orgPosition,
-              position: orgPosition,
-              positions: [...item.positions, ...positions]
-            }
-          }
+        this.handleChangeItem({
+          ...updatingItem,
+          naturalPosition: orgPosition,
+          position: orgPosition,
+          positions: [...item.positions, ...positions]
         });
       }
     }
   };
+
   private handleMouseUp = (/*position: IPosition*/) => {
     this.setState({ updatingItem: undefined, mode: undefined });
   };
@@ -505,22 +515,19 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   private handleChangeFillColor = (color: string) => {
     const { selectedItem, items } = this.state;
 
-    if (
-      selectedItem &&
-      (selectedItem.type === "circle" ||
-        selectedItem.type === "rectangle" ||
-        selectedItem.type === "text") &&
-      typeof selectedItem.itemId === "number"
-    ) {
-      this.setState({
-        items: {
-          ...items,
-          [selectedItem.itemId]: {
-            ...items[selectedItem.itemId],
-            color
-          }
-        }
-      });
+    if (selectedItem && typeof selectedItem.itemId === "number") {
+      const modSelectedItem = { ...items[selectedItem.itemId as number] };
+
+      if (
+        modSelectedItem.type === "circle" ||
+        modSelectedItem.type === "rectangle" ||
+        modSelectedItem.type === "text"
+      ) {
+        this.handleChangeItem({
+          ...modSelectedItem,
+          color
+        });
+      }
     }
 
     this.setState({ color });
@@ -529,137 +536,132 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
   private handleChangeOutlineColor = (color: string) => {
     const { selectedItem, items } = this.state;
 
-    if (
-      selectedItem &&
-      selectedItem.type !== "text" &&
-      typeof selectedItem.itemId === "number"
-    ) {
-      this.setState({
-        items: {
-          ...items,
-          [selectedItem.itemId]: {
-            ...items[selectedItem.itemId],
-            outlineColor: color
-          }
-        }
-      });
+    if (selectedItem && typeof selectedItem.itemId === "number") {
+      const modSelectedItem = { ...items[selectedItem.itemId as number] };
+
+      if (modSelectedItem.type !== "text") {
+        this.handleChangeItem({
+          ...modSelectedItem,
+          outlineColor: color
+        });
+      }
     }
 
     this.setState({ outlineColor: color });
   };
 
   private handleChangeFont = (font: string) => {
-    const { selectedItem, items } = this.state;
+    const { selectedItem, items, target } = this.state;
 
-    if (
-      selectedItem &&
-      selectedItem.type === "text" &&
-      typeof selectedItem.itemId === "number"
-    ) {
-      this.setState({
-        items: {
-          ...items,
-          [selectedItem.itemId]: {
-            ...items[selectedItem.itemId],
-            fontName: font
-          }
-        }
-      });
+    if (selectedItem && typeof selectedItem.itemId === "number") {
+      const modSelectedItem = { ...items[selectedItem.itemId as number] };
+
+      if (modSelectedItem.type === "text") {
+        this.handleChangeItem({
+          ...modSelectedItem,
+          fontName: font
+        });
+      }
     }
 
-    this.setState({ font });
+    this.setState({ font, target: undefined }, () => this.setState({ target }));
   };
 
   private handleChangeFontSize = (size: number) => {
-    const { selectedItem, items } = this.state;
+    const { selectedItem, items, target } = this.state;
 
-    if (
-      selectedItem &&
-      selectedItem.type === "text" &&
-      typeof selectedItem.itemId === "number"
-    ) {
-      this.setState({
-        items: {
-          ...items,
-          [selectedItem.itemId]: {
-            ...items[selectedItem.itemId],
-            fontSize: size
-          }
-        }
-      });
+    if (selectedItem && typeof selectedItem.itemId === "number") {
+      const modSelectedItem = { ...items[selectedItem.itemId as number] };
+
+      if (modSelectedItem.type === "text") {
+        this.handleChangeItem({
+          ...modSelectedItem,
+          fontSize: size
+        });
+      }
     }
-    console.log(size);
-    this.setState({
-      fontSize: size
-    });
+
+    this.setState(
+      {
+        fontSize: size,
+        target: undefined
+      },
+      () => this.setState({ target })
+    );
   };
 
   private handleChangeOutlineWeight = (outline: number) => {
-    const { selectedItem, items } = this.state;
+    const { selectedItem, items, target } = this.state;
 
-    if (
-      selectedItem &&
-      (selectedItem.type === "rectangle" ||
-        selectedItem.type === "line" ||
-        selectedItem.type === "image" ||
-        selectedItem.type === "circle" ||
-        selectedItem.type === "brush") &&
-      typeof selectedItem.itemId === "number"
-    ) {
-      this.setState({
-        items: {
-          ...items,
-          [selectedItem.itemId]: {
-            ...items[selectedItem.itemId],
-            outlineWeight: outline
-          }
-        }
-      });
+    if (selectedItem && typeof selectedItem.itemId === "number") {
+      const modSelectedItem = { ...items[selectedItem.itemId as number] };
+
+      if (modSelectedItem.type !== "text") {
+        this.handleChangeItem({
+          ...modSelectedItem,
+          outlineWeight: outline
+        });
+      }
     }
 
-    this.setState({
-      outlineWeight: outline
-    });
+    this.setState(
+      {
+        outlineWeight: outline,
+        target: undefined
+      },
+      () => this.setState({ target })
+    );
   };
 
   private handleChangeFontStyle = (style: "bold" | "italic" | "underline") => {
     return (status: boolean) => {
-      const { selectedItem, items } = this.state;
+      const { selectedItem, items, target } = this.state;
 
-      if (
-        selectedItem &&
-        selectedItem.type === "text" &&
-        typeof selectedItem.itemId === "number"
-      ) {
-        this.setState({
-          items: {
-            ...items,
-            [selectedItem.itemId]: {
-              ...items[selectedItem.itemId],
-              [style]: status
-            }
-          }
-        });
+      if (selectedItem && typeof selectedItem.itemId === "number") {
+        const modSelectedItem = { ...items[selectedItem.itemId as number] };
+
+        if (modSelectedItem.type === "text") {
+          this.handleChangeItem({
+            ...modSelectedItem,
+            [style]: status
+          });
+        }
       }
 
       switch (style) {
         case "bold":
-          this.setState({
-            bold: status
-          });
+          this.setState(
+            {
+              bold: status,
+              target: undefined
+            },
+            () => this.setState({ target })
+          );
           break;
         case "italic":
-          this.setState({
-            italic: status
-          });
+          this.setState(
+            {
+              italic: status,
+              target: undefined
+            },
+            () => this.setState({ target })
+          );
           break;
         case "underline":
-          this.setState({
-            underline: status
-          });
+          this.setState(
+            {
+              target: undefined,
+              underline: status
+            },
+            () => this.setState({ target })
+          );
           break;
       }
     };
+  };
+
+  private handleChangeTarget = (el?: HTMLElement, func?: () => void) => {
+    this.setState({ target: el }, func);
   };
 }
 

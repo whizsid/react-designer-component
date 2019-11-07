@@ -124,7 +124,7 @@
   cursor: pointer;
 }
 
-.rdc-tooloptions-color-picker-outline {
+.rdc-tooloptions-color-picker-fill {
   top:unset;
   bottom:0;
 }
@@ -142,9 +142,44 @@
 .rdc-tooloptions-font-picker {
   display: inline-block;
   margin-left: 8px;
+  width:200px;
 }
 
 #font-picker {
   position: absolute;
   top: 2px;
+}
+
+.rdc-tooloptions-outline-weight-wrapper,
+.rdc-tooloptions-font-size-wrapper,
+.rdc-tooloptions-bold-default,
+.rdc-tooloptions-italic-default,
+.rdc-tooloptions-underline-default
+ {
+  display: inline-block;
+  padding: 4px;
+  vertical-align:top;
+  margin-left:4px;
+}
+
+.rdc-tooloptions-outline-weight-input,
+.rdc-tooloptions-font-size-input {
+  height: 12px;
+  width:48px;
+}
+
+.rdc-tooloptions-bold-default,
+.rdc-tooloptions-italic-default,
+.rdc-tooloptions-underline-default {
+  padding-top: 8px;
+}
+
+.rdc-tooloptions-bold-active,
+.rdc-tooloptions-italic-active,
+.rdc-tooloptions-underline-active {
+  background: #d0d0d0;
+}
+
+.moveable-control-box {
+  z-index: 1!important;
 }

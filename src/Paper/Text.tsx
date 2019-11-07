@@ -73,7 +73,7 @@ class Text extends React.Component<
 
   private handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { onChangeText } = this.props;
-
+    
     onChangeText(e.target.value);
   };
 
