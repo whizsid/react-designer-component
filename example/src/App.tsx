@@ -38,7 +38,7 @@ class App extends React.Component<{}, IState> {
                 <Designer
                   items={items}
                   onChangeItems={this.handleChangeItems}
-                  fontApiKey="AIzaSyB7h1DuzatBpvp7qhL6NQBgJYFoMYa2ybQ"
+                  fontApiKey="API_KEY"
                   paperSize={{
                     height: 300,
                     width: 600
