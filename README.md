@@ -1,6 +1,18 @@
-# React Designer Component
+<p align="center">
+	<a href="https://github.com/whizsid/react-designer-component">
+			<img src="https://i.imgur.com/dYifMd6.png" />
+	</a>
+</p>
 
-<img align="right" width="400px" src="https://i.imgur.com/bXHpw2P.png" alt="React server side renderable designer canvas" />
+---
+<p align="center">
+	<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="Travis:Status"/></a>
+	<a href="https://travis-ci.org/whizsid/react-designer-component"><img src="https://travis-ci.org/whizsid/react-designer-component.svg?branch=master" alt="Travis:Status"/></a>
+	<a href="https://github.com/whizsid/react-designer-component"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="Code Style: Prettier"/></a>
+</p>
+
+---
+
 
 A server side renderable react canvas.
 
@@ -10,6 +22,10 @@ A server side renderable react canvas.
 - Add texts, images, rectangles and circles
 - You can draw your own shapes by using lines and brush
 - Enable or disable features
+
+### [Watch Demo >>](https://whizsid.github.io/react-designer-component)
+
+<img align="right" width="400px" src="https://i.imgur.com/bXHpw2P.png" alt="React server side renderable designer canvas" />
 
 ## Installation
 
@@ -69,6 +85,7 @@ Please provide following props.
 | className | CSS class name to apply the for the root element | string |
 | features | You can enable/disable features by passing an object. | Object that containing boolean values for text,brush,image,circle,rectangle,line properties. All properties are optional. |
 | classes | You can override all CSS classes by passing an Object | Please look at [this](src/styleClasses.ts) file to see all CSS classes. All properties are optional. |
+|fontApiKey| Google Font API Key if you using the text feature. All fonts loading from google.| string |
 
 ### ImageItem
 
