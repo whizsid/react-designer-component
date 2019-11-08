@@ -96,7 +96,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       italic: false,
       items: {},
       lastItemId: -1,
-      outlineColor: "rgba(0,0,0,0)",
+      outlineColor: "rgba(0,0,0,1)",
       outlineWeight: 4,
       underline: false,
       useInternalItems: !props.items
@@ -520,8 +520,7 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
 
       if (
         modSelectedItem.type === "circle" ||
-        modSelectedItem.type === "rectangle" ||
-        modSelectedItem.type === "text"
+        modSelectedItem.type === "rectangle"
       ) {
         this.handleChangeItem({
           ...modSelectedItem,
@@ -543,6 +542,11 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
         this.handleChangeItem({
           ...modSelectedItem,
           outlineColor: color
+        });
+      } else {
+        this.handleChangeItem({
+          ...modSelectedItem,
+          color
         });
       }
     }

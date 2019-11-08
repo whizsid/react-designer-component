@@ -54,7 +54,7 @@ class ToolOptions extends React.Component<IToolOptionsProps> {
                 />
               </div>,
               <div key={1} className={classes.fontSize.wrapper}>
-                <span className={classes.fontSize.label}>Size :</span>
+                <span className={classes.fontSize.label}>Size </span>
                 <input
                   min="0"
                   type="number"
@@ -97,7 +97,7 @@ class ToolOptions extends React.Component<IToolOptionsProps> {
           : null}
         {mode && mode !== "text" ? (
           <div className={classes.outlineWeight.wrapper}>
-            <span className={classes.outlineWeight.label}>Outline Width :</span>
+            <span className={classes.outlineWeight.label}>Weight </span>
             <input
               min="0"
               type="number"
