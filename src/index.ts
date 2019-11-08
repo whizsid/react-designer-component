@@ -1,2 +1,3 @@
-export * from "./Designer";
-export * from "./types";
+import Designer from "./Designer";
+
+export default Designer;

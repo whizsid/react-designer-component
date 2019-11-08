@@ -9,10 +9,13 @@
 	<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="Travis:Status"/></a>
 	<a href="https://travis-ci.org/whizsid/react-designer-component"><img src="https://travis-ci.org/whizsid/react-designer-component.svg?branch=master" alt="Travis:Status"/></a>
 	<a href="https://github.com/whizsid/react-designer-component"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="Code Style: Prettier"/></a>
+	<a href="https://www.npmjs.com/package/react-designer-component"><img src="https://img.shields.io/npm/v/react-designer-component" alt="NPM: Version"/></a>
 </p>
 
 ---
 
+
+<img align="right" width="400px" src="https://i.imgur.com/bXHpw2P.png" alt="React server side renderable designer canvas" />
 
 A server side renderable react canvas.
 
@@ -25,7 +28,6 @@ A server side renderable react canvas.
 
 ### [Watch Demo >>](https://whizsid.github.io/react-designer-component)
 
-<img align="right" width="400px" src="https://i.imgur.com/bXHpw2P.png" alt="React server side renderable designer canvas" />
 
 ## Installation
 

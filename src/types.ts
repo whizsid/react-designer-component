@@ -1,6 +1,4 @@
-import { string } from "prop-types";
 import * as React from "react";
-import { RGBColor } from "react-color";
 import { DeepPartial } from "ts-essentials";
 
 export interface ISize {
@@ -310,3 +308,9 @@ export interface IIconProps {
   width?: number;
   className?: string;
 }
+
+declare class Designer extends React.Component<IDesignerProps> {
+  constructor(props: IDesignerProps);
+}
+
+export default Designer;
