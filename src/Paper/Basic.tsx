@@ -35,7 +35,7 @@ class Basic extends React.Component<
           left: position.left,
           position: "absolute",
           top: position.top,
-          transform: `rotate( ${rotate}deg})`,
+          transform: `rotate(${rotate}deg)`,
           width: size.width,
           ...styles
         }}

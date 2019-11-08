@@ -43,7 +43,7 @@ class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
           left: position.left,
           position: "absolute",
           top: position.top,
-          transform: `rotate( ${rotate}deg})`,
+          transform: `rotate( ${rotate}deg)`,
           width: widthCalc
         }}
         className={classnames(classes.wrapper, classes.brush)}

@@ -30,7 +30,7 @@ class Line extends React.Component<LineItem & IDesignerItemComponent> {
           paddingTop: 4,
           position: "absolute",
           top: position.top,
-          transform: `rotate( ${rotate}deg})`,
+          transform: `rotate( ${rotate}deg)`,
           transformOrigin: "left top",
           width: widthCalc
         }}

@@ -1,0 +1,6 @@
+src
+!src/types.d.ts
+example
+.babelrc
+.gitignore
+webpack.config.js
