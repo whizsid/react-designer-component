@@ -22,13 +22,15 @@ class Text extends React.Component<
       underline
     } = this.props;
 
+    const fontSizeCalc = fontSize;
+
     return (
       <div
         className={classnames(classes.wrapper, classes.text)}
         style={{
           color,
           fontFamily: fontName,
-          fontSize,
+          fontSize: fontSizeCalc,
           fontStyle: italic ? "italic" : "unset",
           fontWeight: bold ? 750 : 500,
           left: position.left - 8,
@@ -36,7 +38,7 @@ class Text extends React.Component<
           position: "absolute",
           textDecoration: underline ? "underline" : "unset",
           top: position.top - 8,
-          transform: "rotate( " + rotate + "deg)"
+          transform: `rotate( ${rotate}deg)`
         }}
         onClick={this.handleClickWrapper}
       >
@@ -73,7 +75,7 @@ class Text extends React.Component<
 
   private handleChangeText = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { onChangeText } = this.props;
-    
+
     onChangeText(e.target.value);
   };
 

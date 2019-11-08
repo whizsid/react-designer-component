@@ -1,5 +1,5 @@
 import * as React from "react";
-import CloseIcon from "../Icon/Close.svg";
+import CloseSvg from "../Icon/Close.svg";
 
 interface IProps {
   show: boolean;
@@ -17,7 +17,7 @@ const CloseButton: React.FC<IProps> = (props: IProps) => {
   return (
     <div style={{ position: "relative" }}>
       <span onClick={onClick} className={className}>
-        <CloseIcon />
+        <CloseSvg />
       </span>
     </div>
   );

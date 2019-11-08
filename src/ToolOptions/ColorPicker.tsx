@@ -70,9 +70,13 @@ class ColorPicker extends React.Component<
     const { fillColorOpen, outlineColorOpen } = this.state;
 
     if (fillColorOpen && onChangeFillColor && color.rgb.a) {
-      onChangeFillColor(`rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`);
+      onChangeFillColor(
+        `rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`
+      );
     } else if (outlineColorOpen && onChangeOutlineColor && color.rgb.a) {
-      onChangeOutlineColor(`rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`);
+      onChangeOutlineColor(
+        `rgba(${color.rgb.r},${color.rgb.g},${color.rgb.b},${color.rgb.a})`
+      );
     }
   };
 

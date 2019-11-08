@@ -30,12 +30,12 @@ class Basic extends React.Component<
         className={classnames(classes.wrapper, classes[type])}
         style={{
           backgroundColor: color,
-          border: "solid " + outlineWeight + "px " + outlineColor,
+          border: `solid ${outlineWeight}px ${outlineColor}`,
           height: size.height,
           left: position.left,
           position: "absolute",
           top: position.top,
-          transform: "rotate(" + rotate + "deg)",
+          transform: `rotate( ${rotate}deg})`,
           width: size.width,
           ...styles
         }}

@@ -1,5 +1,10 @@
 import * as React from "react";
-import Moveable, { OnDrag, OnResize, OnRotate } from "react-moveable";
+import {
+  default as Moveable,
+  OnDrag,
+  OnResize,
+  OnRotate
+} from "react-moveable";
 import { DesignerItem, IPaperProps, TextItem } from "../types";
 import Basic from "./Basic";
 import Brush from "./Brush";
@@ -45,7 +50,7 @@ class Paper extends React.Component<IPaperProps, IState> {
             {...item}
             {...commonProps}
             styles={{
-              backgroundImage: "url( " + item.data + ")",
+              backgroundImage: `url( ${item.data})`,
               backgroundPosition: "center",
               backgroundSize: "100% 100%"
             }}
@@ -84,11 +89,12 @@ class Paper extends React.Component<IPaperProps, IState> {
     const { classes, height, width, area, items, cursor, target } = this.props;
 
     const { selectedItem } = this.props;
+    const heightCalc = height;
+    const widthCalc = width;
 
-    const clipPath =
-      "polygon(" +
-      area.map(position => position.left + " " + position.top).join(", ") +
-      ")";
+    const clipPath = `polygon( ${area
+      .map(position => `${position.left} ${position.top}`)
+      .join(", ")})`;
 
     return (
       <div
@@ -123,10 +129,10 @@ class Paper extends React.Component<IPaperProps, IState> {
             clipPath,
             cursor,
             display: "block",
-            height,
+            height: heightCalc,
             overflow: "hidden",
             position: "relative",
-            width
+            width: widthCalc
           }}
           ref={this.canvasRef}
           onMouseDown={this.handleMouseDown}
@@ -303,32 +309,32 @@ class Paper extends React.Component<IPaperProps, IState> {
   };
 
   protected handleMouseDown = (e: React.MouseEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement;
+    const targetEl = e.target as HTMLElement;
     this.handleStartDraw({
       currentTarget: e.currentTarget,
-      target,
+      target: targetEl,
       x: e.clientX,
       y: e.clientY
     });
   };
 
   protected handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement;
+    const targetEl = e.target as HTMLElement;
 
     this.handleDraw({
       currentTarget: e.currentTarget,
-      target,
+      target: targetEl,
       x: e.clientX,
       y: e.clientY
     });
   };
 
   protected handleMouseUp = (e: React.MouseEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement;
+    const targetEl = e.target as HTMLElement;
 
     this.handleEndDraw({
       currentTarget: e.currentTarget,
-      target,
+      target: targetEl,
       x: e.clientX,
       y: e.clientY
     });
@@ -337,12 +343,12 @@ class Paper extends React.Component<IPaperProps, IState> {
   protected handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
     const { mouseDown } = this.state;
 
-    const target = e.target as HTMLElement;
+    const targetEl = e.target as HTMLElement;
 
     if (mouseDown) {
       this.handleEndDraw({
         currentTarget: e.currentTarget,
-        target,
+        target: targetEl,
         x: e.clientX,
         y: e.clientY
       });
@@ -350,13 +356,13 @@ class Paper extends React.Component<IPaperProps, IState> {
   };
 
   protected handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement;
+    const targetEl = e.target as HTMLElement;
     const touch = e.touches[0];
 
     if (touch) {
       this.handleStartDraw({
         currentTarget: e.currentTarget,
-        target,
+        target: targetEl,
         x: touch.clientX,
         y: touch.clientY
       });
@@ -364,13 +370,13 @@ class Paper extends React.Component<IPaperProps, IState> {
   };
 
   protected handleTouchMove = (e: React.TouchEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement;
+    const targetEl = e.target as HTMLElement;
     const touch = e.touches[0];
 
     if (touch) {
       this.handleDraw({
         currentTarget: e.currentTarget,
-        target,
+        target: targetEl,
         x: touch.clientX,
         y: touch.clientY
       });
@@ -378,13 +384,13 @@ class Paper extends React.Component<IPaperProps, IState> {
   };
 
   protected handleTouchEnd = (e: React.TouchEvent<HTMLElement>) => {
-    const target = e.target as HTMLElement;
+    const targetEl = e.target as HTMLElement;
     const touch = e.touches[0];
 
     if (touch) {
       this.handleEndDraw({
         currentTarget: e.currentTarget,
-        target,
+        target: targetEl,
         x: touch.clientX,
         y: touch.clientY
       });

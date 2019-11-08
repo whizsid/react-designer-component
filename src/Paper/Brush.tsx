@@ -32,19 +32,19 @@ class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
       prvPos.top > curPos.top ? curPos : prvPos
     );
 
-    const width = Math.abs(minLeft.left - maxLeft.left);
-    const height = Math.abs(minTop.top - maxTop.top);
+    const widthCalc = Math.abs(minLeft.left - maxLeft.left);
+    const heightCalc = Math.abs(minTop.top - maxTop.top);
 
     return (
       <div
         onClick={onSelect}
         style={{
-          height,
+          height: heightCalc,
           left: position.left,
           position: "absolute",
           top: position.top,
-          transform: "rotate(" + rotate + "deg)",
-          width
+          transform: `rotate( ${rotate}deg})`,
+          width: widthCalc
         }}
         className={classnames(classes.wrapper, classes.brush)}
       >
@@ -55,9 +55,9 @@ class Brush extends React.Component<BrushItem & IDesignerItemComponent> {
         />
         <div
           style={{
-            height,
+            height: heightCalc,
             position: "relative",
-            width
+            width: widthCalc
           }}
         >
           {positions.map((pos, key) => (

@@ -1,10 +1,10 @@
 import * as React from "react";
-import BoxIcon from "../Icon/AddBox.svg";
-import CircleIcon from "../Icon/AddCircle.svg";
-import ImageIcon from "../Icon/AddPhotoAlternate.svg";
-import BrushIcon from "../Icon/Brush.svg";
-import LineIcon from "../Icon/LineWeight.svg";
-import TextIcon from "../Icon/TextFormat.svg";
+import AddBoxSvg from "../Icon/AddBox.svg";
+import AddCircleSvg from "../Icon/AddCircle.svg";
+import AddPhotoAlternateSvg from "../Icon/AddPhotoAlternate.svg";
+import BrushSvg from "../Icon/Brush.svg";
+import LineWeightSvg from "../Icon/LineWeight.svg";
+import TextFormatSvg from "../Icon/TextFormat.svg";
 import { IImageInfo, IToolBoxProps } from "../types";
 import Button from "./Button";
 
@@ -37,7 +37,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
         {features.image ? (
           <Button
             onClick={this.handleClickImageInput}
-            icon={<ImageIcon />}
+            icon={<AddPhotoAlternateSvg />}
             active={mode && mode === "image"}
             classes={classes.button}
             tooltip={"Click to add an image"}
@@ -46,7 +46,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
         {features.circle ? (
           <Button
             onClick={onAddCircle}
-            icon={<CircleIcon />}
+            icon={<AddCircleSvg />}
             classes={classes.button}
             active={mode && mode === "circle"}
             tooltip={"Click to add a circle"}
@@ -55,7 +55,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
         {features.rectangle ? (
           <Button
             onClick={onAddRectangle}
-            icon={<BoxIcon />}
+            icon={<AddBoxSvg />}
             classes={classes.button}
             active={mode && mode === "rectangle"}
             tooltip={"Click to add a rectangle"}
@@ -64,7 +64,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
         {features.line ? (
           <Button
             onClick={onAddLine}
-            icon={<LineIcon />}
+            icon={<LineWeightSvg />}
             classes={classes.button}
             active={mode && mode === "line"}
             tooltip={"Click to add a straight line"}
@@ -73,7 +73,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
         {features.text ? (
           <Button
             onClick={onAddText}
-            icon={<TextIcon />}
+            icon={<TextFormatSvg />}
             classes={classes.button}
             active={mode && mode === "text"}
             tooltip={"Click to add text"}
@@ -82,7 +82,7 @@ class ToolBox extends React.Component<IToolBoxProps, IState> {
         {features.brush ? (
           <Button
             onClick={onAddBrush}
-            icon={<BrushIcon />}
+            icon={<BrushSvg />}
             classes={classes.button}
             active={mode && mode === "brush"}
             tooltip={"Click to toggle to brush mode"}

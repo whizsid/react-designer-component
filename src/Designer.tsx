@@ -11,10 +11,10 @@ import {
   BrushItem,
   DesignerItem,
   IDesignerProps,
+  IFeatures,
   IImageInfo,
   IPosition,
-  IStyleClasses,
-  IFeatures
+  IStyleClasses
 } from "./types";
 
 interface IDesignerState {
@@ -290,18 +290,18 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
     this.setState({ selectedItem: item });
   };
 
-  private handleMouseDown = (position: IPosition) => {
+  private handleMouseDown = (paramPosition: IPosition) => {
     const {
       mode,
       color,
       lastImageInfo,
-      outlineColor,
+      outlineColor: ocColor,
       font,
-      italic,
-      bold,
-      fontSize,
-      underline,
-      outlineWeight
+      italic: stItalic,
+      bold: stBold,
+      fontSize: stFontSize,
+      underline: stUnderline,
+      outlineWeight: weight
     } = this.state;
 
     if (!mode) {
@@ -321,9 +321,9 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
       ables: {
         ...ables
       },
-      outlineColor,
-      outlineWeight,
-      position,
+      outlineColor: ocColor,
+      outlineWeight: weight,
+      position: paramPosition,
       rotate: 0,
       size: { width: 4, height: 4 }
     };
@@ -357,9 +357,9 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
             ...ables
           },
           naturalWidth: 4,
-          outlineColor,
-          outlineWeight,
-          position,
+          outlineColor: ocColor,
+          outlineWeight: weight,
+          position: paramPosition,
           rotate: 0,
           type: "line",
           width: 4
@@ -372,17 +372,17 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
             outline: false,
             resize: false
           },
-          bold,
-          color: outlineColor,
+          bold: stBold,
+          color: ocColor,
           fontId: 1,
           fontName: font,
-          fontSize,
-          italic,
-          position,
+          fontSize: stFontSize,
+          italic: stItalic,
+          position: paramPosition,
           rotate: 0,
           text: "Click to add a text",
           type: "text",
-          underline
+          underline: stUnderline
         });
         this.setState({ updatingItem: undefined });
         break;
@@ -396,11 +396,11 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
             resize: false,
             rotate: true
           },
-          naturalPosition: position,
-          outlineColor,
-          outlineWeight,
-          position,
-          positions: [position],
+          naturalPosition: paramPosition,
+          outlineColor: ocColor,
+          outlineWeight: weight,
+          position: paramPosition,
+          positions: [paramPosition],
           rotate: 0,
           type: "brush"
         });
@@ -467,23 +467,23 @@ class Designer extends React.Component<IDesignerProps, IDesignerState> {
           const intercept = lastPosition.top - slope * lastPosition.left;
 
           if (position.left >= lastPosition.left) {
-            for (let x = lastPosition.left; x <= position.left; x++) {
+            for (let x = lastPosition.left; x <= position.left; x += 1) {
               const y = slope * x + intercept;
               positions.push({ left: x, top: y });
             }
           } else {
-            for (let x = lastPosition.left; x >= position.left; x--) {
+            for (let x = lastPosition.left; x >= position.left; x -= 1) {
               const y = slope * x + intercept;
               positions.push({ left: x, top: y });
             }
           }
         } else {
           if (position.top >= lastPosition.top) {
-            for (let y = lastPosition.top; y < position.top; y++) {
+            for (let y = lastPosition.top; y < position.top; y += 1) {
               positions.push({ left: position.left, top: y });
             }
           } else {
-            for (let y = lastPosition.top; y > position.top; y--) {
+            for (let y = lastPosition.top; y > position.top; y -= 1) {
               positions.push({ left: position.left, top: y });
             }
           }

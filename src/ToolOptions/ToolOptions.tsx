@@ -1,10 +1,10 @@
 import { Font } from "@samuelmeuli/font-manager";
 import classnames from "classnames";
-import FontPicker from "font-picker-react";
+import { default as FontPicker } from "font-picker-react";
 import * as React from "react";
-import BoldIcon from "../Icon/Bold.svg";
-import ItalicIcon from "../Icon/Italic.svg";
-import UnderLineIcon from "../Icon/Underline.svg";
+import BoldSvg from "../Icon/Bold.svg";
+import ItalicSvg from "../Icon/Italic.svg";
+import UnderlineSvg from "../Icon/Underline.svg";
 import { IToolOptionsProps } from "../types";
 import ColorPicker from "./ColorPicker";
 
@@ -71,7 +71,7 @@ class ToolOptions extends React.Component<IToolOptionsProps> {
                 )}
                 onClick={this.handleClickItalicIcon}
               >
-                <ItalicIcon />
+                <ItalicSvg />
               </span>,
               <span
                 key={3}
@@ -81,7 +81,7 @@ class ToolOptions extends React.Component<IToolOptionsProps> {
                 )}
                 onClick={this.handleClickBoldIcon}
               >
-                <BoldIcon />
+                <BoldSvg />
               </span>,
               <span
                 key={4}
@@ -91,7 +91,7 @@ class ToolOptions extends React.Component<IToolOptionsProps> {
                 )}
                 onClick={this.handleClickUnderlineIcon}
               >
-                <UnderLineIcon />
+                <UnderlineSvg />
               </span>
             ]
           : null}

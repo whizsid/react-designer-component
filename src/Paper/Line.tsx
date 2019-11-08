@@ -16,10 +16,13 @@ class Line extends React.Component<LineItem & IDesignerItemComponent> {
       outlineColor,
       width
     } = this.props;
+
+    const widthCalc = width;
+
     return (
       <div
         onClick={onSelect}
-        className={ classnames( classes.wrapper,classes.line)}
+        className={classnames(classes.wrapper, classes.line)}
         style={{
           height: outlineWeight + 8,
           left: position.left,
@@ -27,9 +30,9 @@ class Line extends React.Component<LineItem & IDesignerItemComponent> {
           paddingTop: 4,
           position: "absolute",
           top: position.top,
-          transform: "rotate(" + rotate + "deg)",
+          transform: `rotate( ${rotate}deg})`,
           transformOrigin: "left top",
-          width
+          width: widthCalc
         }}
       >
         <CloseButton
@@ -41,7 +44,7 @@ class Line extends React.Component<LineItem & IDesignerItemComponent> {
           style={{
             background: outlineColor,
             height: outlineWeight,
-            width
+            width: widthCalc
           }}
         />
       </div>

@@ -1,7 +1,7 @@
-import * as React from "react";
-import { DeepPartial } from "ts-essentials";
 import { string } from "prop-types";
+import * as React from "react";
 import { RGBColor } from "react-color";
+import { DeepPartial } from "ts-essentials";
 
 export interface ISize {
   width: number;

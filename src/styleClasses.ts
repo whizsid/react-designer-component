@@ -19,11 +19,11 @@ const styleClasses: IStyleClasses = {
       wrapper: "rdc-paper"
     },
     toolOptions: {
-      boldIcon:{
-        active:"rdc-tooloptions-bold-active",
+      boldIcon: {
+        active: "rdc-tooloptions-bold-active",
         default: "rdc-tooloptions-bold-default"
       },
-      colorPicker:{
+      colorPicker: {
         fill: "rdc-tooloptions-color-picker-fill",
         okButton: "rdc-tooloptions-color-picker-ok-button",
         outline: "rdc-tooloptions-color-picker-outline",
@@ -36,17 +36,17 @@ const styleClasses: IStyleClasses = {
         label: "rdc-tooloptions-font-size-label",
         wrapper: "rdc-tooloptions-font-size-wrapper"
       },
-      italicIcon:{
-        active:"rdc-tooloptions-italic-active",
+      italicIcon: {
+        active: "rdc-tooloptions-italic-active",
         default: "rdc-tooloptions-italic-default"
       },
-      outlineWeight:{
+      outlineWeight: {
         input: "rdc-tooloptions-outline-weight-input",
         label: "rdc-tooloptions-outline-weight-label",
         wrapper: "rdc-tooloptions-outline-weight-wrapper"
       },
-      underlineIcon:{
-        active:"rdc-tooloptions-underline-active",
+      underlineIcon: {
+        active: "rdc-tooloptions-underline-active",
         default: "rdc-tooloptions-underline-default"
       },
       wrapper: "rdc-tooloptions"
