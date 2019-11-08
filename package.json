@@ -1,6 +1,6 @@
 {
   "name": "react-designer-component",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A server side renderable react designer canvas component. You can add images, add texts, draw circles .. etc in this canvas.",
   "main": "dist/index.js",
   "types": "src/types.ts",
