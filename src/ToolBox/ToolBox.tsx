@@ -1,10 +1,10 @@
 import * as React from "react";
-import AddBoxSvg from "../Icon/AddBox.svg";
-import AddCircleSvg from "../Icon/AddCircle.svg";
-import AddPhotoAlternateSvg from "../Icon/AddPhotoAlternate.svg";
-import BrushSvg from "../Icon/Brush.svg";
-import LineWeightSvg from "../Icon/LineWeight.svg";
-import TextFormatSvg from "../Icon/TextFormat.svg";
+import { ReactComponent as AddBoxSvg } from "../Icon/AddBox.svg";
+import { ReactComponent as AddCircleSvg } from "../Icon/AddCircle.svg";
+import { ReactComponent as AddPhotoAlternateSvg } from "../Icon/AddPhotoAlternate.svg";
+import { ReactComponent as BrushSvg } from "../Icon/Brush.svg";
+import { ReactComponent as LineWeightSvg } from "../Icon/LineWeight.svg";
+import { ReactComponent as TextFormatSvg } from "../Icon/TextFormat.svg";
 import { IImageInfo, IToolBoxProps } from "../types";
 import Button from "./Button";
 

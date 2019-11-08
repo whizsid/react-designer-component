@@ -1,5 +1,5 @@
 import * as React from "react";
-import CloseSvg from "../Icon/Close.svg";
+import { ReactComponent as CloseSvg } from "../Icon/Close.svg";
 
 interface IProps {
   show: boolean;
