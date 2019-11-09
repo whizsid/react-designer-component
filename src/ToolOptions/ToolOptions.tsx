@@ -2,9 +2,9 @@ import { Font } from "@samuelmeuli/font-manager";
 import classnames from "classnames";
 import { default as FontPicker } from "font-picker-react";
 import * as React from "react";
-import { ReactComponent as BoldSvg } from "../Icon/Bold.svg";
-import { ReactComponent as ItalicSvg } from "../Icon/Italic.svg";
-import { ReactComponent as UnderlineSvg } from "../Icon/Underline.svg";
+import BoldSvg from "../Icon/Bold.svg";
+import ItalicSvg from "../Icon/Italic.svg";
+import UnderlineSvg from "../Icon/Underline.svg";
 import { IToolOptionsProps } from "../types";
 import ColorPicker from "./ColorPicker";
 

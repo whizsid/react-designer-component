@@ -38,8 +38,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"forceConsistentCasingInFileNames": true,
 		"importHelpers": true
-	},
-	"include": [
-		"src/custom.d.ts"
-	]
+	}
 }

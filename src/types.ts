@@ -207,7 +207,7 @@ export interface IDesignerClasses {
   paper: IPaperClasses;
 }
 
-interface IFeatures {
+export interface IFeatures {
   text?: boolean;
   brush?: boolean;
   image?: boolean;
