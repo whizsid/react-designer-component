@@ -88,7 +88,8 @@ Please provide following props.
 | features | You can enable/disable features by passing an object. | Object that containing boolean values for text,brush,image,circle,rectangle,line properties. All properties are optional. |
 | classes | You can override all CSS classes by passing an Object | Please look at [this](src/styleClasses.ts) file to see all CSS classes. All properties are optional. |
 |fontApiKey| Google Font API Key if you using the text feature. All fonts loading from google.| string |
-
+|paperSize| Size of the paper. | Object with `width:number` and `height:number` properties. Default values are 300 pixel height and 600 pixel width. |
+|drawingArea| Supply coordinates of a polygon if you want a custom shape other than a rectangle. | Array of positions. Ex:- `[{left:300,right:400},...]` |
 ### ImageItem
 
 You can find following properties in an image item.
